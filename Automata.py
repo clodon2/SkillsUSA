@@ -6,7 +6,7 @@ from random import choice, randrange
 def generate_start_grid(width, height):
     # creates starting grid, 0 = dead cell 1 = alive cell
     grid = create_grid(width, height)
-    grid = random_kill(grid)
+    grid = track_kill(grid)
     return grid
 
 
@@ -37,12 +37,33 @@ def random_kill(grid):
 
 def track_kill(grid):
     rows = len(grid)
+    mid_row = rows / 2
     columns = len(grid[0])
 
-    deaths = round(START_DEATH_PERCENT * (rows * columns))
+    # start area
+    if type(mid_row) == float:
+        mid_row = int(mid_row)
+        row_range = (mid_row - 3, mid_row + 4)
+        column_range = (0, 10)
+        for r in range(row_range[0], row_range[1], 1):
+            for c in range(column_range[0], column_range[1]):
+                print(r, c)
+                grid[r][c] = 0
+    elif type(mid_row) == int:
+        row_range = (mid_row - 3, mid_row + 3)
+        column_range = (0, 10)
+        for r in range(row_range[0], row_range[1], 1):
+            for c in range(column_range[0], column_range[1]):
+                print(r, c)
+                grid[r][c] = 0
 
-    for i in range(deaths):
-        pass
+    c = 0
+    for p in range(int(columns/3)):
+        nc = c + int(columns/3)
+        target_point = (randrange(0, rows, 1), randrange(c, nc, 1))
+        c += int(columns/3)
+
+    return grid
 
 
 # needs to check in a square around the cell for "alive" aka "1" neighbors
@@ -72,6 +93,7 @@ def run_sim_step(grid):
     for r in range(len(grid)):
         for c in range(len(grid[0])):
             neighbors = count_alive_neighbors((r, c), grid)
+            print(neighbors)
             if grid[r][c] == 1:
                 if neighbors > MAX_NEIGHBORS_DEATH or neighbors < MIN_NEIGHBORS_DEATH:
                     new_grid[r][c] = 0

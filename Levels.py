@@ -18,7 +18,7 @@ def setup_level(game):
             
 
 def update_level(game):
-    game.grid = run_sim(1, game.grid)
+    game.grid = run_sim(3, game.grid)
 
     game.scene.get_sprite_list("cells").clear()
     for r in range(len(game.grid)):
