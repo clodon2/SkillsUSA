@@ -1,6 +1,5 @@
 from Globals import *
 import arcade as arc
-from copy import deepcopy
 from Automata import generate_start_grid, run_sim
 
 
