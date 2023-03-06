@@ -33,6 +33,9 @@ class GameView(arc.View):
         if key == arc.key.N:
             lvl.update_level(self)
 
+        if key == arc.key.C:
+            self.scene["cells"].clear()
+
     def on_show_view(self):
         arc.set_viewport(0, self.window.width, 0, self.window.height)
         self.load_level()
@@ -41,7 +44,7 @@ class GameView(arc.View):
         lvl.setup_level(self)
 
     def on_draw(self):
-        arc.draw_rectangle_filled(250, 250, 500, 500, arc.color.BLACK)
+        arc.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, arc.color.BLACK)
         self.scene.draw()
 
     def on_update(self, delta_time: float):
