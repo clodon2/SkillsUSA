@@ -47,21 +47,21 @@ def track_kill(grid):
         column_range = (0, 10)
         for r in range(row_range[0], row_range[1], 1):
             for c in range(column_range[0], column_range[1]):
-                print(r, c)
                 grid[r][c] = 0
     elif type(mid_row) == int:
         row_range = (mid_row - 3, mid_row + 3)
         column_range = (0, 10)
         for r in range(row_range[0], row_range[1], 1):
             for c in range(column_range[0], column_range[1]):
-                print(r, c)
                 grid[r][c] = 0
 
     c = 0
-    for p in range(int(columns/3)):
+    for p in range(3):
         nc = c + int(columns/3)
         target_point = (randrange(0, rows, 1), randrange(c, nc, 1))
         c += int(columns/3)
+
+        grid[target_point[0]][target_point[1]] = 0
 
     return grid
 
@@ -74,16 +74,14 @@ def count_alive_neighbors(cell, grid):
     
     for r in range(-1, 2):
         for c in range(-1, 2):
+            neighbor = ((c_row + r), (c_column + c))
             if r == 0 and c == 0:
-                pass
+                continue
             else:
-                # this error happens with the outside cells of the grid, 
-                # it should give them an extra neighbor probably
-                try:
-                    if grid[c_row + r][c_column + c] == 1:
-                        neighbors += 1
-                except:
-                    pass
+                if r < 0 or c < 0 or neighbor[0] > (len(grid) - 1) or neighbor[1] > (len(grid[0]) - 1):
+                    neighbors += 1
+                elif grid[neighbor[0]][neighbor[1]] == 1:
+                    neighbors += 1
 
     return neighbors
 
@@ -93,14 +91,12 @@ def run_sim_step(grid):
     for r in range(len(grid)):
         for c in range(len(grid[0])):
             neighbors = count_alive_neighbors((r, c), grid)
-            print(neighbors)
             if grid[r][c] == 1:
                 if neighbors > MAX_NEIGHBORS_DEATH or neighbors < MIN_NEIGHBORS_DEATH:
                     new_grid[r][c] = 0
             if grid[r][c] == 0:
                 if neighbors > MIN_NEIGHBORS_BIRTH:
                     new_grid[r][c] = 1
-
     return new_grid
 
 
@@ -109,3 +105,4 @@ def run_sim(step_num, grid):
         grid = run_sim_step(grid)
 
     return grid
+
