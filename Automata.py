@@ -1,6 +1,7 @@
 # functions and stuff for generation
 from Globals import *
 from random import choice, randrange
+from copy import deepcopy
 
 
 def generate_start_grid(width, height):
@@ -109,7 +110,7 @@ def count_alive_neighbors(cell, grid):
 
 
 def run_sim_step(grid):
-    new_grid = grid
+    new_grid = deepcopy(grid)
     for r in range(len(grid)):
         for c in range(len(grid[0])):
             neighbors = count_alive_neighbors((r, c), grid)
