@@ -56,6 +56,7 @@ def track_kill(grid):
                 grid[r][c] = 0
 
     c = 0
+    last_target = (int(mid_row), 0)
     for p in range(3):
         nc = c + int(columns/3)
         target_point = (randrange(0, rows, 1), randrange(c, nc, 1))
@@ -63,6 +64,26 @@ def track_kill(grid):
         for rr in range(-1, 1, 1):
             for rc in range(-1, 1, 1):
                 grid[target_point[0] + rr][target_point[1] + rc] = 0
+
+        square_area = abs(target_point[0] - last_target[0]) * abs(target_point[1] - last_target[1])
+        death_amount = int(.6 * square_area)
+        for i in range(death_amount):
+            if last_target[0] < target_point[0]:
+                kill_r = randrange(last_target[0], target_point[0])
+            elif last_target[0] > target_point[0]:
+                kill_r = randrange(target_point[0], last_target[0])
+            else:
+                kill_r = target_point[0]
+
+            if last_target[1] < target_point[1]:
+                kill_c = randrange(last_target[1], target_point[1])
+            elif last_target[1] > target_point[1]:
+                kill_c = randrange(target_point[1], last_target[1])
+            else:
+                kill_c = target_point[1]
+            grid[kill_r][kill_c] = 0
+
+        last_target = target_point
 
     return grid
 
@@ -78,11 +99,10 @@ def count_alive_neighbors(cell, grid):
             neighbor = ((c_row + r), (c_column + c))
             if r == 0 and c == 0:
                 continue
-            else:
-                if neighbor[0] < 0 or neighbor[1] < 0 or neighbor[0] > (len(grid) - 1) or neighbor[1] > (len(grid[0]) - 1):
-                    neighbors += 1
-                elif grid[neighbor[0]][neighbor[1]] == 1:
-                    neighbors += 1
+            elif neighbor[0] < 0 or neighbor[1] < 0 or neighbor[0] > (len(grid) - 1) or neighbor[1] > (len(grid[0]) - 1):
+                neighbors += 1
+            elif grid[neighbor[0]][neighbor[1]] == 1:
+                neighbors += 1
 
     print(neighbors)
     return neighbors
