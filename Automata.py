@@ -6,7 +6,7 @@ from random import choice, randrange
 def generate_start_grid(width, height):
     # creates starting grid, 0 = dead cell 1 = alive cell
     grid = create_grid(width, height)
-    grid = track_kill(grid)
+    grid = random_kill(grid)
     return grid
 
 
@@ -28,7 +28,7 @@ def random_kill(grid):
     columns = len(grid[0])
     # amount of cells to kill
     deaths = round(START_DEATH_PERCENT * (rows * columns))
-    # choose random cells yo kill
+    # choose random cells to kill
     for i in range(deaths):
         grid[randrange(0, rows, 1)][randrange(0, columns, 1)] = 0
 
@@ -60,8 +60,9 @@ def track_kill(grid):
         nc = c + int(columns/3)
         target_point = (randrange(0, rows, 1), randrange(c, nc, 1))
         c += int(columns/3)
-
-        grid[target_point[0]][target_point[1]] = 0
+        for rr in range(-1, 1, 1):
+            for rc in range(-1, 1, 1):
+                grid[target_point[0] + rr][target_point[1] + rc] = 0
 
     return grid
 
@@ -78,11 +79,12 @@ def count_alive_neighbors(cell, grid):
             if r == 0 and c == 0:
                 continue
             else:
-                if r < 0 or c < 0 or neighbor[0] > (len(grid) - 1) or neighbor[1] > (len(grid[0]) - 1):
+                if neighbor[0] < 0 or neighbor[1] < 0 or neighbor[0] > (len(grid) - 1) or neighbor[1] > (len(grid[0]) - 1):
                     neighbors += 1
                 elif grid[neighbor[0]][neighbor[1]] == 1:
                     neighbors += 1
 
+    print(neighbors)
     return neighbors
 
 
@@ -94,9 +96,13 @@ def run_sim_step(grid):
             if grid[r][c] == 1:
                 if neighbors > MAX_NEIGHBORS_DEATH or neighbors < MIN_NEIGHBORS_DEATH:
                     new_grid[r][c] = 0
-            if grid[r][c] == 0:
+                else:
+                    new_grid[r][c] = 1
+            elif grid[r][c] == 0:
                 if neighbors > MIN_NEIGHBORS_BIRTH:
                     new_grid[r][c] = 1
+                else:
+                    new_grid[r][c] = 0
     return new_grid
 
 
@@ -105,4 +111,3 @@ def run_sim(step_num, grid):
         grid = run_sim_step(grid)
 
     return grid
-

@@ -33,6 +33,9 @@ class GameView(arc.View):
         if key == arc.key.N:
             lvl.update_level(self)
 
+        if key == arc.key.R:
+            lvl.setup_level(self)
+
         if key == arc.key.C:
             self.scene["cells"].clear()
 
