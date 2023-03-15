@@ -5,7 +5,7 @@ from Automata import generate_start_grid, run_sim, create_grid
 
 def setup_level(game):
     game.scene = arc.Scene()
-    game.scene.add_sprite_list("cells")
+    game.scene.add_sprite_list("cells", use_spatial_hash=True)
     game.grid = generate_start_grid(GRID_WIDTH, GRID_HEIGHT)
     
     for r in range(len(game.grid)):
