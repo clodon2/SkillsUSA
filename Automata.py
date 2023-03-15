@@ -5,10 +5,17 @@ from random import choice, randrange
 from copy import deepcopy
 
 
-def generate_start_grid(width, height):
-    # creates starting grid, 0 = dead cell 1 = alive cell
-    grid = create_grid(width, height)
+def generate_track_grid(height, width):
+    # creates starting track grid, 0 = dead cell 1 = alive cell
+    grid = create_grid(height, width)
     grid = track_kill(grid)
+    return grid
+
+
+def generate_random_grid(width, height):
+    # generates grid with random dead cells
+    grid = create_grid(width, height)
+    grid = random_kill(grid)
     return grid
 
 
@@ -65,7 +72,6 @@ def track_kill(grid):
     last_target = (int(mid_row), 0)
     for p in range(TRACK_KILL_POINT_AMOUNT + 1):
         # calculate where a point should be
-        print(current_column, usable_columns, int(usable_columns/TRACK_KILL_POINT_AMOUNT))
         target_point = (randrange(2, rows - 2, 1), current_column)
         current_column += int(usable_columns/TRACK_KILL_POINT_AMOUNT)
 
@@ -146,4 +152,10 @@ def run_sim(step_num, grid):
     for i in range(step_num):
         grid = run_sim_step(grid)
 
+    return grid
+
+
+def generate_track(width=105, height=70):
+    grid = generate_track_grid(height, width)
+    grid = run_sim(6, grid)
     return grid
