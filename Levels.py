@@ -20,7 +20,7 @@ def setup_level(game):
 def new_track(game):
     game.scene = arc.Scene()
     game.scene.add_sprite_list("cells", use_spatial_hash=True)
-    game.grid = generate_track()
+    game.grid = generate_track(GRID_WIDTH, GRID_HEIGHT)
 
     for r in range(len(game.grid)):
         for c in range(len(game.grid[0])):
