@@ -1,6 +1,7 @@
 import arcade as arc
 from Globals import *
 import Levels as lvl
+from math import radians
 
 
 class MainMenu(arc.View):
@@ -51,7 +52,7 @@ class GameView(arc.View):
         self.grid = []
 
     def process_keychange(self):
-        print(self.w_pressed)
+        # print(self.w_pressed)
         # Process left/right
         if self.w_pressed or self.up_pressed:
             self.move_up = True
@@ -74,11 +75,11 @@ class GameView(arc.View):
             self.move_right = False
 
         if self.move_right and not self.move_left:
-            self.player.change_x = PLAYER_MOVEMENT_SPEED
+            self.player.change_angle = -PLAYER_ROTATION_SPEED
         elif self.move_left and not self.move_right:
-            self.player.change_x = -PLAYER_MOVEMENT_SPEED
+            self.player.change_angle = PLAYER_ROTATION_SPEED
         elif not self.move_left and not self.move_right:
-            self.player.change_x = 0
+            self.player.change_angle = 0
 
         if self.move_up and not self.move_down:
             self.player.change_y = PLAYER_MOVEMENT_SPEED

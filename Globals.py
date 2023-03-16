@@ -5,6 +5,7 @@ SCREEN_TITLE = "Cellular Automata Racing"
 
 # Player stuff
 PLAYER_MOVEMENT_SPEED = 5
+PLAYER_ROTATION_SPEED = 3
 
 # Cell Generation
 GRID_WIDTH = 100
