@@ -1,4 +1,6 @@
 # functions and stuff for generation
+import arcade
+
 from Globals import *
 from Misc_Functions import easy_randrange
 from random import choice, randrange
@@ -74,12 +76,31 @@ def track_kill(grid):
         # calculate where a point should be
         target_point = (randrange(2, rows - 2, 1), current_column)
         current_column += int(usable_columns/TRACK_KILL_POINT_AMOUNT)
-
         # generate points on cell grid to create paths between
         for rr in range(-1, 1, 1):
             for rc in range(-1, 1, 1):
                 grid[target_point[0] + rr][target_point[1] + rc] = 0
 
+        # draw beginning lines between points
+        # get slope of points
+        slope = (target_point[0] - last_target[0])/(target_point[1] - last_target[1])
+        # go through all Xs between points
+        for x in range(last_target[1], target_point[1]):
+            # calculate Y of point based on point-slope form
+            point_y = (slope * (x - last_target[1])) + last_target[0]
+            # delete cells in an area around and on the calculated point, randomly
+            for delete_x in range(-5, 5):
+                for delete_y in range(-5, 5):
+                    # make sure point wont be outside of grid bounds
+                    if rows > (delete_y + int(point_y)) > 0 and columns > (x + delete_x) > 0:
+                        death_chance = randrange(0, 100)
+                        if (death_chance / 100) <= TRACK_KILL_DEATH_PERCENT:
+                            grid[int(point_y) + delete_y][x + delete_x] = 0
+
+        last_target = target_point
+
+        # old generation
+        '''''
         # randomly kill cells between the last point and the current one
         square_length = abs(target_point[0] - last_target[0])
         square_width = abs(target_point[1] - last_target[1])
@@ -110,7 +131,7 @@ def track_kill(grid):
             grid[kill_r][kill_c] = 0
 
         last_target = target_point
-
+    '''''
     return grid
 
 
@@ -157,5 +178,5 @@ def run_sim(step_num, grid):
 
 def generate_track(width=105, height=70):
     grid = generate_track_grid(height, width)
-    grid = run_sim(6, grid)
+    grid = run_sim(5, grid)
     return grid
