@@ -1,7 +1,10 @@
 SCREEN_WIDTH = 1080
 SCREEN_HEIGHT = 720
 
-SCREEN_TITLE = "Cellular Automata"
+SCREEN_TITLE = "Cellular Automata Racing"
+
+# Player stuff
+PLAYER_MOVEMENT_SPEED = 5
 
 # Cell Generation
 GRID_WIDTH = 100

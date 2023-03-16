@@ -1,13 +1,28 @@
 from Globals import *
 import arcade as arc
 from Automata import generate_random_grid, run_sim, generate_track
+from Player import BasicPlayer
 
 
-def setup_level(game):
+def new_track(game):
     game.scene = arc.Scene()
+
+    # load in track
     game.scene.add_sprite_list("cells", use_spatial_hash=True)
-    game.grid = generate_random_grid(GRID_WIDTH, GRID_HEIGHT)
-    
+    game.grid = generate_track(GRID_WIDTH, GRID_HEIGHT)
+
+    load_track(game)
+
+    # player
+    game.scene.add_sprite_list_before("player", "cells")
+    game.player = BasicPlayer()
+    game.player.center_x = SCREEN_WIDTH / 2
+    game.player.center_y = SCREEN_HEIGHT / 2
+    game.scene.add_sprite("player", game.player)
+    game.physics_engine = arc.PhysicsEngineSimple(game.player, [])
+
+
+def load_track(game):
     for r in range(len(game.grid)):
         for c in range(len(game.grid[0])):
             if game.grid[r][c] == 1:
@@ -17,10 +32,10 @@ def setup_level(game):
                 game.scene.add_sprite("cells", cell)
 
 
-def new_track(game):
+def setup_level(game):
     game.scene = arc.Scene()
     game.scene.add_sprite_list("cells", use_spatial_hash=True)
-    game.grid = generate_track(GRID_WIDTH, GRID_HEIGHT)
+    game.grid = generate_random_grid(GRID_WIDTH, GRID_HEIGHT)
 
     for r in range(len(game.grid)):
         for c in range(len(game.grid[0])):
