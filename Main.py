@@ -1,3 +1,4 @@
+import arcade
 import arcade as arc
 from Globals import *
 import Levels as lvl
@@ -31,6 +32,11 @@ class GameView(arc.View):
         self.player = None
 
         # input stuff
+        self.controller = None
+
+        self.right_trigger_pressed = False
+        self.left_trigger_pressed = False
+
         self.w_pressed = False
         self.s_pressed = False
         self.a_pressed = False
@@ -53,24 +59,25 @@ class GameView(arc.View):
         self.grid = []
 
     def process_keychange(self):
-        # print(self.w_pressed)
+        # print(self.controller.x)
+
         # Process left/right
-        if self.w_pressed or self.up_pressed:
+        if self.w_pressed or self.up_pressed or self.right_trigger_pressed:
             self.move_up = True
         else:
             self.move_up = False
 
-        if self.s_pressed or self.down_pressed:
+        if self.s_pressed or self.down_pressed or self.left_trigger_pressed:
             self.move_down = True
         else:
             self.move_down = False
 
-        if self.a_pressed or self.left_pressed:
+        if self.a_pressed or self.left_pressed or self.controller.x < -DEADZONE:
             self.move_left = True
         else:
             self.move_left = False
 
-        if self.d_pressed or self.right_pressed:
+        if self.d_pressed or self.right_pressed or self.controller.x > DEADZONE:
             self.move_right = True
         else:
             self.move_right = False
@@ -144,8 +151,32 @@ class GameView(arc.View):
 
         self.process_keychange()
 
+    # noinspection PyMethodMayBeStatic
+    def on_joybutton_press(self, joystick, button):
+
+        if button == 7:  # Right Trigger
+            self.right_trigger_pressed = True
+        elif button == 6:  # Left Trigger
+            self.left_trigger_pressed = True
+
+    # noinspection PyMethodMayBeStatic
+    def on_joybutton_release(self, joystick, button):
+
+        if button == 7:  # Right Trigger
+            self.right_trigger_pressed = False
+        elif button == 6:  # Left Trigger
+            self.left_trigger_pressed = False
+
     def on_show_view(self):
         arc.set_viewport(0, self.window.width, 0, self.window.height)
+
+        controllers = arcade.get_game_controllers()
+
+        if controllers:
+            self.controller = controllers[0]
+            self.controller.open()
+            self.controller.push_handlers(self)
+
         self.load_level()
 
     def load_level(self):
