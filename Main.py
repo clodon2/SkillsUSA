@@ -72,12 +72,12 @@ class GameView(arc.View):
         else:
             self.move_down = False
 
-        if self.a_pressed or self.left_pressed or self.controller.x < -DEADZONE:
+        if self.a_pressed or self.left_pressed or (self.controller and self.controller.x < -DEADZONE):
             self.move_left = True
         else:
             self.move_left = False
 
-        if self.d_pressed or self.right_pressed or self.controller.x > DEADZONE:
+        if self.d_pressed or self.right_pressed or (self.controller and self.controller.x > DEADZONE):
             self.move_right = True
         else:
             self.move_right = False
