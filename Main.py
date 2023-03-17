@@ -195,14 +195,7 @@ class GameView(arc.View):
             self.camera.viewport_height / 2
         )
 
-        # Don't let camera travel past 0
-        if screen_center_x < 0:
-            screen_center_x = 0
-        if screen_center_y < 0:
-            screen_center_y = 0
-        player_centered = screen_center_x, screen_center_y
-
-        self.camera.move_to(player_centered)
+        self.camera.move_to((screen_center_x, screen_center_y))
 
     def on_update(self, delta_time: float):
         self.process_keychange()
