@@ -27,6 +27,7 @@ class GameView(arc.View):
 
         self.scene = None
 
+        self.camera = None
         self.player = None
 
         # input stuff
@@ -152,12 +153,29 @@ class GameView(arc.View):
 
     def on_draw(self):
         arc.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, arc.color.BLACK)
+        self.camera.use()
         self.scene.draw()
+
+    def center_camera_to_player(self):
+        screen_center_x = self.player.center_x - (self.camera.viewport_width / 2)
+        screen_center_y = self.player.center_y - (
+            self.camera.viewport_height / 2
+        )
+
+        # Don't let camera travel past 0
+        if screen_center_x < 0:
+            screen_center_x = 0
+        if screen_center_y < 0:
+            screen_center_y = 0
+        player_centered = screen_center_x, screen_center_y
+
+        self.camera.move_to(player_centered)
 
     def on_update(self, delta_time: float):
         self.process_keychange()
         self.scene.update()
         self.physics_engine.update()
+        self.center_camera_to_player()
 
 
 def main():

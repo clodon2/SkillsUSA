@@ -1,3 +1,5 @@
+import arcade
+
 from Globals import *
 import arcade as arc
 from Automata import generate_random_grid, run_sim, generate_track
@@ -15,6 +17,9 @@ def new_track(game):
 
     # player
     game.scene.add_sprite_list_after("player", "cells")
+
+    game.camera = arcade.Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
+
     game.player = BasicPlayer()
     game.player.center_x = SCREEN_WIDTH / 2
     game.player.center_y = SCREEN_HEIGHT / 2
