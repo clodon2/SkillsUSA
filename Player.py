@@ -8,7 +8,7 @@ class BasicPlayer(arc.Sprite):
         self.scale = .5
 
     def update(self):
-        self.center_x += self.change_y * cos(radians(self.angle))
-        self.center_y += self.change_y * sin(radians(self.angle))
+        self.center_x += -self.change_y * sin(radians(self.angle))
+        self.center_y += self.change_y * cos(radians(self.angle))
         self.change_x = 0
         self.change_y = 0
