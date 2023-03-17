@@ -183,8 +183,10 @@ class GameView(arc.View):
         lvl.new_track(self)
 
     def on_draw(self):
-        arc.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, arc.color.BLACK)
         self.camera.use()
+
+        arc.draw_rectangle_filled(self.camera.position.x + self.camera.viewport_width / 2, self.camera.position.y + self.camera.viewport_height / 2, self.camera.viewport_width, self.camera.viewport_height, arc.color.BLACK)
+
         self.scene.draw()
 
     def center_camera_to_player(self):
