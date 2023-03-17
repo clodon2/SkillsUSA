@@ -14,12 +14,12 @@ def new_track(game):
     load_track(game)
 
     # player
-    game.scene.add_sprite_list_before("player", "cells")
+    game.scene.add_sprite_list_after("player", "cells")
     game.player = BasicPlayer()
     game.player.center_x = SCREEN_WIDTH / 2
     game.player.center_y = SCREEN_HEIGHT / 2
     game.scene.add_sprite("player", game.player)
-    game.physics_engine = arc.PhysicsEngineSimple(game.player, [])
+    game.physics_engine = arc.PhysicsEngineSimple(game.player, game.scene.get_sprite_list("cells"))
 
 
 def load_track(game):
