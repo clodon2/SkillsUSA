@@ -1,0 +1,41 @@
+import arcade as arc
+from Globals import *
+from math import cos, radians, sin
+
+
+class PowerUp(arc.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.type = "base"
+
+
+class Drill(PowerUp):
+    def __init__(self, launch_angle):
+        super().__init__()
+        self.type = "drill"
+        self.texture = arc.load_texture("Assets/Powerups/drill/drill1.png")
+        self.set_hit_box(self.texture.hit_box_points)
+
+        self.scale = .3
+        self.angle = launch_angle + 90
+
+        self.change_x = DRILL_SPEED
+        self.change_y = DRILL_SPEED
+
+        self.timer = 0
+
+        self.k_bar_marg = CELL_WIDTH * 3
+
+    def update(self):
+        self.timer += 1
+        self.center_x += -self.change_y * sin(radians(self.angle - 90))
+        self.center_y += self.change_y * cos(radians(self.angle - 90))\
+
+        # delete drill if too close to outside of track
+        if not (self.k_bar_marg <= self.center_x <= (CELL_GRID_WIDTH - self.k_bar_marg)) or \
+                not (self.k_bar_marg <= self.center_y <= (CELL_GRID_HEIGHT - self.k_bar_marg)):
+            self.kill()
+
+        # kill drill after a bit of time, could have it die in a dif way
+        if self.timer >= 100:
+            self.kill()

@@ -2,6 +2,7 @@ import arcade
 import arcade as arc
 from Globals import *
 import Levels as lvl
+from World_Objects import Drill
 from math import radians
 
 
@@ -118,6 +119,15 @@ class GameView(arc.View):
         if key == arc.key.ESCAPE:
             quit()
         # DEV INPUTS
+        if key == arc.key.SPACE:
+            for i in self.scene["powerups"]:
+                print(i, "easjg")
+            new_drill = Drill(launch_angle=self.player.angle)
+            new_drill.center_x = self.player.center_x
+            new_drill.center_y = self.player.center_y
+            self.scene.add_sprite("powerups", sprite=new_drill)
+
+
         # run cellular automata for 1 step
         if key == arc.key.N:
             lvl.update_level(self)
@@ -205,6 +215,11 @@ class GameView(arc.View):
         self.physics_engine.update()
         self.center_camera_to_player()
 
+        # powerup interactions
+        for powerup in self.scene["powerups"]:
+            if powerup.type == "drill":
+                for cell in powerup.collides_with_list(self.scene["cells"]):
+                    cell.kill()
 
 def main():
     """Main function"""

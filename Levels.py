@@ -26,12 +26,14 @@ def new_track(game):
     game.scene.add_sprite("player", game.player)
     game.physics_engine = arc.PhysicsEngineSimple(game.player, game.scene.get_sprite_list("cells"))
 
+    game.scene.add_sprite_list_after("powerups", "player")
+
 
 def load_track(game):
     for r in range(len(game.grid)):
         for c in range(len(game.grid[0])):
             if game.grid[r][c] == 1:
-                cell = arc.SpriteSolidColor(width=CELL_WIDTH, height=CELL_HEIGHT, color=arc.color.BLUE)
+                cell = arc.SpriteSolidColor(width=CELL_WIDTH, height=CELL_HEIGHT, color=arc.color.GRAY)
                 cell.center_x = c * CELL_WIDTH + GRID_BL_POS[0]
                 cell.center_y = r * CELL_HEIGHT + GRID_BL_POS[1]
                 game.scene.add_sprite("cells", cell)
