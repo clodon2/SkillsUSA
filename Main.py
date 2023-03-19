@@ -185,7 +185,9 @@ class GameView(arc.View):
     def on_draw(self):
         self.camera.use()
 
-        arc.draw_rectangle_filled(self.camera.position.x + self.camera.viewport_width / 2, self.camera.position.y + self.camera.viewport_height / 2, self.camera.viewport_width, self.camera.viewport_height, arc.color.BLACK)
+        arc.draw_rectangle_filled(self.camera.position.x + self.camera.viewport_width / 2,
+                                  self.camera.position.y + self.camera.viewport_height / 2,
+                                  self.camera.viewport_width, self.camera.viewport_height, arc.color.BLACK)
 
         self.scene.draw()
 

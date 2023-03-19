@@ -92,7 +92,7 @@ def track_kill(grid):
             for delete_x in range(-5, 5):
                 for delete_y in range(-5, 5):
                     # make sure point wont be outside of grid bounds
-                    if rows > (delete_y + int(point_y)) > 0 and columns > (x + delete_x) > 0:
+                    if (rows - 2) > (delete_y + int(point_y)) > 0 and columns > (x + delete_x) > 0:
                         death_chance = randrange(0, 100)
                         if (death_chance / 100) <= TRACK_KILL_DEATH_PERCENT:
                             grid[int(point_y) + delete_y][x + delete_x] = 0

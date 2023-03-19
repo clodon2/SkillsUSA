@@ -21,8 +21,8 @@ def new_track(game):
     game.camera = arcade.Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
 
     game.player = BasicPlayer()
-    game.player.center_x = SCREEN_WIDTH / 2
-    game.player.center_y = SCREEN_HEIGHT / 2
+    game.player.center_x = 2 * CELL_WIDTH
+    game.player.center_y = (GRID_HEIGHT / 2) * CELL_HEIGHT
     game.scene.add_sprite("player", game.player)
     game.physics_engine = arc.PhysicsEngineSimple(game.player, game.scene.get_sprite_list("cells"))
 
