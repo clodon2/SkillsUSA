@@ -30,6 +30,11 @@ class GameView(arc.View):
         self.scene = None
 
         self.camera = None
+        self.view_left = 0
+        self.view_bottom = 0
+        self.end_of_map = CELL_GRID_WIDTH
+        self.map_height = CELL_GRID_HEIGHT
+
         self.player = None
 
         # input stuff
@@ -202,12 +207,55 @@ class GameView(arc.View):
         self.scene.draw()
 
     def center_camera_to_player(self):
+        # Scroll left
+        left_boundary = self.view_left + LEFT_VIEWPORT_MARGIN
+        if self.player.left < left_boundary:
+            self.view_left -= left_boundary - self.player.left
+
+        # Scroll right
+        right_boundary = self.view_left + self.width - RIGHT_VIEWPORT_MARGIN
+        if self.player.right > right_boundary:
+            self.view_left += self.player.right - right_boundary
+
+        # Scroll up
+        top_boundary = self.view_bottom + self.height - TOP_VIEWPORT_MARGIN
+        if self.player.top > top_boundary:
+            self.view_bottom += self.player.top - top_boundary
+
+        # Scroll down
+        bottom_boundary = self.view_bottom + BOTTOM_VIEWPORT_MARGIN
+        if self.player.bottom < bottom_boundary:
+            self.view_bottom -= bottom_boundary - self.player.bottom
+
+        # keeps camera in left bound of map
+        if self.view_left < 0:
+            self.view_left = 0
+
+        # keeps camera in right bound of map
+        if (self.view_left + self.width) > self.end_of_map:
+            self.view_left = self.end_of_map - self.width
+
+        # keeps camera in bottom bound of map
+        if self.view_bottom < 0:
+            self.view_bottom = 0
+
+        # keeps camera in top bound of map
+        if self.view_bottom > self.map_height:
+            self.view_bottom = self.map_height
+
+        # Scroll to the proper location
+        position = self.view_left, self.view_bottom
+        self.camera.move_to(position, CAMERA_SPEED)
+
+        # OLD
+        '''''
         screen_center_x = self.player.center_x - (self.camera.viewport_width / 2)
         screen_center_y = self.player.center_y - (
             self.camera.viewport_height / 2
         )
 
         self.camera.move_to((screen_center_x, screen_center_y))
+        '''''
 
     def on_update(self, delta_time: float):
         self.process_keychange()
