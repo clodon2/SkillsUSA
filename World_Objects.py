@@ -1,5 +1,6 @@
 import arcade as arc
 from Globals import *
+from Misc_Functions import load_animation_one
 from math import cos, radians, sin
 
 
@@ -8,11 +9,14 @@ class PowerUp(arc.Sprite):
         super().__init__()
         self.type = "base"
 
+        self.cur_frame = 0
+
 
 class Drill(PowerUp):
     def __init__(self, launch_angle):
         super().__init__()
         self.type = "drill"
+        self.animation = load_animation_one("Assets/Powerups/drill")
         self.texture = arc.load_texture("Assets/Powerups/drill/drill1.png")
         self.set_hit_box(self.texture.hit_box_points)
 
@@ -39,3 +43,7 @@ class Drill(PowerUp):
         # kill drill after a bit of time, could have it die in a dif way
         if self.timer >= 100:
             self.kill()
+
+    def update_animation(self, delta_time: float = 1 / 60):
+        self.cur_frame += .5
+        self.texture = self.animation[round(round(self.cur_frame) % len(self.animation))]

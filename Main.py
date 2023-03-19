@@ -198,7 +198,7 @@ class GameView(arc.View):
         arc.draw_rectangle_filled(self.camera.position.x + self.camera.viewport_width / 2,
                                   self.camera.position.y + self.camera.viewport_height / 2,
                                   self.camera.viewport_width, self.camera.viewport_height, arc.color.BLACK)
-
+        self.scene["powerups"].update_animation()
         self.scene.draw()
 
     def center_camera_to_player(self):
