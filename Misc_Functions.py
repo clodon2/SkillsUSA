@@ -1,6 +1,7 @@
 import arcade as arc
 from random import randrange
 from os import walk
+from math import sqrt
 
 
 # basically just the randrange function, but automatically puts the lower value first
@@ -34,11 +35,11 @@ def IsRectCollidingWithPoint(rect, point):
 
 def get_closest_wall(object, walls):
     closest_wall = walls[0]
-    closest_wall_y = abs(object.center_y - walls[0].center_y)
+    closest_wall_dist = sqrt(abs(object.center_y - walls[0].center_y)**2 + abs(object.center_x - walls[0].center_x)**2)
     for wall in walls:
-        wall_y_dist = abs(object.center_y - wall.center_y)
-        if wall_y_dist < closest_wall_y:
+        wall_dist = sqrt(abs(object.center_y - wall.center_y) ** 2 + abs(object.center_x - wall.center_x) ** 2)
+        if wall_dist < closest_wall_dist:
             closest_wall = wall
-            closest_wall_y = wall_y_dist
+            closest_wall_dist = wall_dist
 
     return closest_wall

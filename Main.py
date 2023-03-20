@@ -5,7 +5,7 @@ import Levels as lvl
 from World_Objects import Drill
 from Misc_Functions import IsRectCollidingWithPoint
 from Menus import start_menu
-from math import radians
+from math import radians, sin, cos
 
 
 class MainMenu(arc.View):
@@ -85,6 +85,8 @@ class GameView(arc.View):
         # grid/automata stuff
         self.level_update_timer = 0
         self.grid = []
+
+        self.track_points = []
 
     def process_keychange(self):
         # print(self.controller.x)
@@ -235,6 +237,15 @@ class GameView(arc.View):
                                   self.camera.viewport_width, self.camera.viewport_height, arc.color.BLACK)
         self.scene["powerups"].update_animation()
         self.scene.draw()
+
+        for bot in self.scene["bots"]:
+            arc.draw_line(bot.center_x, bot.center_y, bot.center_x + 100 * cos(bot.desired_angle), bot.center_y + 100 * sin(bot.desired_angle), (0, 0, 255), 10)
+
+        i = 0
+        for point in self.track_points:
+            i += 1
+            arc.draw_circle_filled(point[1] * CELL_HEIGHT + GRID_BL_POS[1], point[0] * CELL_WIDTH + GRID_BL_POS[0], 10, (0, 255, 0))
+            arc.draw_text(str(i), point[1] * CELL_HEIGHT + GRID_BL_POS[1], point[0] * CELL_WIDTH + GRID_BL_POS[0])
 
     def center_camera_to_player(self):
         # Scroll left

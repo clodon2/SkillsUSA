@@ -13,7 +13,7 @@ def new_track(game):
 
     # load in track
     game.scene.add_sprite_list("cells", use_spatial_hash=True)
-    game.grid = generate_track(GRID_WIDTH, GRID_HEIGHT)
+    game.grid, game.track_points = generate_track(GRID_WIDTH, GRID_HEIGHT)
 
     load_track(game)
 
@@ -30,7 +30,7 @@ def new_track(game):
 
     game.scene.add_sprite_list_after("bots", "player")
 
-    bot = BasicBot(walls=game.scene["cells"])
+    bot = BasicBot(walls=game.scene["cells"], track_points=game.track_points)
     bot.center_x = 2 * CELL_WIDTH
     bot.center_y = (GRID_HEIGHT / 2) * CELL_HEIGHT
     game.scene.add_sprite("bots", bot)

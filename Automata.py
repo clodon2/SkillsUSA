@@ -10,8 +10,8 @@ from copy import deepcopy
 def generate_track_grid(height, width):
     # creates starting track grid, 0 = dead cell 1 = alive cell
     grid = create_grid(height, width)
-    grid = track_kill(grid)
-    return grid
+    grid, targets = track_kill(grid)
+    return grid, targets
 
 
 def generate_random_grid(width, height):
@@ -71,11 +71,14 @@ def track_kill(grid):
     usable_columns = columns - column_range[1]
 
     current_column = column_range[1]
+    targets = []
     last_target = (int(mid_row), 0)
     for p in range(TRACK_KILL_POINT_AMOUNT + 1):
         # calculate where a point should be
         target_point = (randrange(2, rows - 2, 1), current_column)
         current_column += int(usable_columns/TRACK_KILL_POINT_AMOUNT)
+
+        targets.append(target_point)
         # generate points on cell grid to create paths between
         for rr in range(-1, 1, 1):
             for rc in range(-1, 1, 1):
@@ -132,7 +135,7 @@ def track_kill(grid):
 
         last_target = target_point
     '''''
-    return grid
+    return grid, targets
 
 
 # needs to check in a square around the cell for "alive" aka "1" neighbors
@@ -177,6 +180,6 @@ def run_sim(step_num, grid):
 
 
 def generate_track(width=105, height=70):
-    grid = generate_track_grid(height, width)
+    grid, targets = generate_track_grid(height, width)
     grid = run_sim(5, grid)
-    return grid
+    return grid, targets
