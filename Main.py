@@ -240,8 +240,8 @@ class GameView(arc.View):
             self.view_bottom = 0
 
         # keeps camera in top bound of map
-        if self.view_bottom > self.map_height:
-            self.view_bottom = self.map_height
+        if self.view_bottom + self.height > self.map_height:
+            self.view_bottom = self.map_height - self.height
 
         # Scroll to the proper location
         position = self.view_left, self.view_bottom
