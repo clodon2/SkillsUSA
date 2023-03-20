@@ -24,7 +24,7 @@ class MainMenu(arc.View):
         start_menu(self)
 
     def on_draw(self):
-        arc.draw_xywh_rectangle_filled(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color=arc.color.BLUE)
+        arc.draw_xywh_rectangle_filled(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color=arc.color.DARK_SLATE_GRAY)
 
         for button in self.button_list:
             button.update()
@@ -40,7 +40,6 @@ class MainMenu(arc.View):
                 if button.id == "start":
                     game_view = GameView()
                     self.window.show_view(game_view)
-
 
 
 class GameView(arc.View):

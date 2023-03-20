@@ -8,4 +8,5 @@ class Car(arc.Sprite):
 
     def update(self):
         self.center_x = -self.change_y * sin(radians(self.angle))
+        
         self.center_y = self.change_y * cos(radians(self.angle))

@@ -1,3 +1,5 @@
+import arcade as arc
+
 SCREEN_WIDTH = 1080
 SCREEN_HEIGHT = 720
 MID_SCREEN = SCREEN_WIDTH / 2
@@ -8,6 +10,8 @@ SCREEN_PERCENT = (SCREEN_PERCENTS[0] + SCREEN_PERCENTS[1]) / 2
 SCREEN_TITLE = "Cellular Automata Racing"
 
 # Menu Stuff
+# for custom fonts
+arc.load_font("Assets/Menus/ARCADECLASSIC.TTF")
 DEFAULT_FONT_SIZE = 25
 
 # Player stuff
