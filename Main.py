@@ -80,6 +80,7 @@ class GameView(arc.View):
         self.move_right = False
 
         self.physics_engine = None
+        self.bot_physics = []
 
         # grid/automata stuff
         self.level_update_timer = 0
@@ -290,6 +291,8 @@ class GameView(arc.View):
         self.process_keychange()
         self.scene.update()
         self.physics_engine.update()
+        for phy in self.bot_physics:
+            phy.update()
         self.center_camera_to_player()
 
         # powerup interactions
@@ -297,6 +300,7 @@ class GameView(arc.View):
             if powerup.type == "drill":
                 for cell in powerup.collides_with_list(self.scene["cells"]):
                     cell.kill()
+
 
 def main():
     """Main function"""

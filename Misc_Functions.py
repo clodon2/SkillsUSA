@@ -30,3 +30,15 @@ def IsRectCollidingWithPoint(rect, point):
         return True
     else:
         return False
+
+
+def get_closest_wall(object, walls):
+    closest_wall = walls[0]
+    closest_wall_y = abs(object.center_y - walls[0].center_y)
+    for wall in walls:
+        wall_y_dist = abs(object.center_y - wall.center_y)
+        if wall_y_dist < closest_wall_y:
+            closest_wall = wall
+            closest_wall_y = wall_y_dist
+
+    return closest_wall

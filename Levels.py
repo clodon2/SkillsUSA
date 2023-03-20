@@ -3,6 +3,7 @@ import arcade
 from Globals import *
 import arcade as arc
 from Automata import generate_random_grid, run_sim, generate_track
+from Bots import BasicBot
 from Player import BasicPlayer
 from math import sin, cos
 
@@ -27,7 +28,16 @@ def new_track(game):
     game.scene.add_sprite("player", game.player)
     game.physics_engine = arc.PhysicsEngineSimple(game.player, game.scene.get_sprite_list("cells"))
 
-    game.scene.add_sprite_list_after("powerups", "player")
+    game.scene.add_sprite_list_after("bots", "player")
+
+    bot = BasicBot(walls=game.scene["cells"])
+    bot.center_x = 2 * CELL_WIDTH
+    bot.center_y = (GRID_HEIGHT / 2) * CELL_HEIGHT
+    game.scene.add_sprite("bots", bot)
+    bot_physics = arc.PhysicsEngineSimple(bot, game.scene.get_sprite_list("cells"))
+    game.bot_physics.append(bot_physics)
+
+    game.scene.add_sprite_list_after("powerups", "bots")
 
 
 def load_track(game):
