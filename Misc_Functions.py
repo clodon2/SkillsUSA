@@ -22,3 +22,11 @@ def load_animation_one(path):
             image_texture = arc.load_texture(full_path)
             frames.append(image_texture)
     return frames
+
+
+# Check if point is within bounds of rectangle.
+def IsRectCollidingWithPoint(rect, point):
+    if rect[3][0] >= point[0] >= rect[0][0] and rect[1][1] >= point[1] >= rect[0][1]:
+        return True
+    else:
+        return False

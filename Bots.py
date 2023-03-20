@@ -1,4 +1,5 @@
 import arcade as arc
+from math import sin, cos, radians
 
 
 class Car(arc.Sprite):
