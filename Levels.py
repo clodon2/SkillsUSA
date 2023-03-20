@@ -4,6 +4,7 @@ from Globals import *
 import arcade as arc
 from Automata import generate_random_grid, run_sim, generate_track
 from Player import BasicPlayer
+from math import sin, cos
 
 
 def new_track(game):
@@ -33,7 +34,8 @@ def load_track(game):
     for r in range(len(game.grid)):
         for c in range(len(game.grid[0])):
             if game.grid[r][c] == 1:
-                cell = arc.SpriteSolidColor(width=CELL_WIDTH, height=CELL_HEIGHT, color=arc.color.GRAY)
+                cell_shade = int((sin(r / CELL_COLOR_GRANULARITY) + sin(c / CELL_COLOR_GRANULARITY) + 2) / 4 * (CELL_COLOR_MAX - CELL_COLOR_MIN)) + CELL_COLOR_MIN
+                cell = arc.SpriteSolidColor(width=CELL_WIDTH, height=CELL_HEIGHT, color=(cell_shade, cell_shade, cell_shade))
                 cell.center_x = c * CELL_WIDTH + GRID_BL_POS[0]
                 cell.center_y = r * CELL_HEIGHT + GRID_BL_POS[1]
                 game.scene.add_sprite("cells", cell)
