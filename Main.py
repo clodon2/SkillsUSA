@@ -3,6 +3,8 @@ import arcade as arc
 from Globals import *
 import Levels as lvl
 from World_Objects import Drill
+from Misc_Functions import IsRectCollidingWithPoint
+from Menus import start_menu
 from math import radians
 
 
@@ -14,11 +16,31 @@ class MainMenu(arc.View):
 
         self.scene = None
 
-    def on_draw(self):
-        self.scene.draw()
+        self.camera = None
+        self.button_list = []
+        self.text_list = []
 
-    def on_update(self, delta_time: float):
-        self.scene.update()
+    def on_show_view(self):
+        start_menu(self)
+
+    def on_draw(self):
+        arc.draw_xywh_rectangle_filled(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color=arc.color.BLUE)
+
+        for button in self.button_list:
+            button.update()
+        for text in self.text_list:
+            try:
+                text.update()
+            except:
+                text.draw()
+
+    def on_mouse_press(self, mouse_x: int, mouse_y: int, button: int, modifiers: int):
+        for button in self.button_list:
+            if IsRectCollidingWithPoint(button.get_rect(), (mouse_x, mouse_y)):
+                if button.id == "start":
+                    game_view = GameView()
+                    self.window.show_view(game_view)
+
 
 
 class GameView(arc.View):
@@ -272,7 +294,7 @@ class GameView(arc.View):
 def main():
     """Main function"""
     window = arc.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, fullscreen=False, resizable=True)
-    start_view = GameView()
+    start_view = MainMenu()
     window.show_view(start_view)
     arc.run()
 
