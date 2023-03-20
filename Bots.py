@@ -42,6 +42,11 @@ class BasicBot(arc.Sprite):
 
     def update(self):
         closest_wall = get_closest_wall(self, self.walls)
+
+        if self.last_track_point + 1 == len(self.track_points):
+            self.kill()
+            return
+
         next_track_point = self.track_points[self.last_track_point + 1]
         next_track_point_pos = (next_track_point[1] * CELL_HEIGHT + GRID_BL_POS[1], next_track_point[0] * CELL_WIDTH + GRID_BL_POS[0])
 

@@ -79,6 +79,8 @@ class GameView(arc.View):
         self.move_left = False
         self.move_right = False
 
+        self.powerup_pressed = False
+
         self.physics_engine = None
         self.bot_physics = []
 
@@ -134,6 +136,13 @@ class GameView(arc.View):
         elif not self.move_left and not self.move_right:
             self.player.change_angle = 0
 
+        if self.powerup_pressed:
+            self.powerup_pressed = False
+            new_drill = Drill(launch_angle=self.player.angle)
+            new_drill.center_x = self.player.center_x
+            new_drill.center_y = self.player.center_y
+            self.scene.add_sprite("powerups", sprite=new_drill)
+
     def on_key_press(self, key, modifiers):
         if key == arc.key.W:
             self.w_pressed = True
@@ -157,12 +166,7 @@ class GameView(arc.View):
             quit()
         # DEV INPUTS
         if key == arc.key.SPACE:
-            for i in self.scene["powerups"]:
-                print(i, "easjg")
-            new_drill = Drill(launch_angle=self.player.angle)
-            new_drill.center_x = self.player.center_x
-            new_drill.center_y = self.player.center_y
-            self.scene.add_sprite("powerups", sprite=new_drill)
+            self.powerup_pressed = True
 
 
         # run cellular automata for 1 step
@@ -205,6 +209,8 @@ class GameView(arc.View):
             self.right_trigger_pressed = True
         elif button == 6:  # Left Trigger
             self.left_trigger_pressed = True
+        elif button == 3:  # "X" Button
+            self.powerup_pressed = True
 
     # noinspection PyMethodMayBeStatic
     def on_joybutton_release(self, joystick, button):
@@ -213,6 +219,8 @@ class GameView(arc.View):
             self.right_trigger_pressed = False
         elif button == 6:  # Left Trigger
             self.left_trigger_pressed = False
+        elif button == 3:  # "X" Button
+            self.powerup_pressed = False
 
     def on_show_view(self):
         arc.set_viewport(0, self.window.width, 0, self.window.height)
