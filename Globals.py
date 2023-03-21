@@ -18,7 +18,7 @@ DEFAULT_FONT_SIZE = 25
 
 # Player stuff
 # forwards driving speeds
-PLAYER_MAX_SPEED = 15
+PLAYER_MAX_SPEED = 8
 PLAYER_ACCELERATION_SPEED = .4
 
 # backwards driving speeds

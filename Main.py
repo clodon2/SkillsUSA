@@ -74,6 +74,8 @@ class GameView(arc.View):
         self.left_pressed = False
         self.right_pressed = False
 
+        self.thumbstick_rotation = 0
+
         self.move_up = False
         self.move_down = False
         self.move_left = False
@@ -93,6 +95,11 @@ class GameView(arc.View):
     def process_keychange(self):
         # print(self.controller.x)
 
+        if self.controller:
+            self.thumbstick_rotation = self.controller.x
+        else:
+            self.thumbstick_rotation = 0
+
         # Process left/right
         if self.w_pressed or self.up_pressed or self.right_trigger_pressed:
             self.move_up = True
@@ -104,12 +111,12 @@ class GameView(arc.View):
         else:
             self.move_down = False
 
-        if self.a_pressed or self.left_pressed or (self.controller and self.controller.x < -DEADZONE):
+        if self.a_pressed or self.left_pressed or self.thumbstick_rotation < -DEADZONE:
             self.move_left = True
         else:
             self.move_left = False
 
-        if self.d_pressed or self.right_pressed or (self.controller and self.controller.x > DEADZONE):
+        if self.d_pressed or self.right_pressed or self.thumbstick_rotation > DEADZONE:
             self.move_right = True
         else:
             self.move_right = False
@@ -119,14 +126,17 @@ class GameView(arc.View):
         elif self.move_down and not self.move_up:
             self.player.backwards_accelerate()
 
+        controller_rotation_mult = 1
+
+        if self.thumbstick_rotation != 0:
+            controller_rotation_mult = abs(self.thumbstick_rotation)
+
         if self.player.speed == 0 and self.player.speed == 0:
             self.player.change_angle = 0
         elif self.move_right and not self.move_left:
-            rotation = -PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player)
-            self.player.change_angle = rotation
+            self.player.change_angle = -PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player.speed) * controller_rotation_mult
         elif self.move_left and not self.move_right:
-            rotation = PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player)
-            self.player.change_angle = rotation
+            self.player.change_angle = PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player.speed) * controller_rotation_mult
         elif not self.move_left and not self.move_right:
             self.player.change_angle = 0
 
@@ -240,14 +250,16 @@ class GameView(arc.View):
         self.scene["powerups"].update_animation()
         self.scene.draw()
 
+        '''
         for bot in self.scene["bots"]:
             arc.draw_line(bot.center_x, bot.center_y, bot.center_x + 100 * cos(bot.desired_angle), bot.center_y + 100 * sin(bot.desired_angle), (0, 0, 255), 10)
-
+    
         i = 0
         for point in self.track_points:
             i += 1
             arc.draw_circle_filled(point[1] * CELL_HEIGHT + GRID_BL_POS[1], point[0] * CELL_WIDTH + GRID_BL_POS[0], 10, (0, 255, 0))
             arc.draw_text(str(i), point[1] * CELL_HEIGHT + GRID_BL_POS[1], point[0] * CELL_WIDTH + GRID_BL_POS[0])
+        '''
 
     def center_camera_to_player(self):
         # Scroll left
@@ -301,7 +313,7 @@ class GameView(arc.View):
         '''''
 
     def on_update(self, delta_time: float):
-        print(arcade.get_fps(30))
+        # print(arcade.get_fps(30))
         self.process_keychange()
         self.scene.update()
         self.physics_engine.update()

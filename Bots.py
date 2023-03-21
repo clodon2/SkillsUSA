@@ -1,7 +1,7 @@
 import arcade as arc
 from Globals import *
 from Misc_Functions import get_closest_wall
-from math import sin, cos, radians, degrees, sqrt, atan2, pi
+from math import sin, cos, radians, degrees, sqrt, atan2, pi, copysign
 
 
 class Car(arc.Sprite):
@@ -54,7 +54,7 @@ class BasicBot(arc.Sprite):
 
         self.angle %= 360
 
-        desired_angle = atan2(next_track_point_pos[1] - self.center_y, next_track_point_pos[0] - self.center_x) - (pi/2)
+        desired_angle = atan2(next_track_point_pos[1] - self.center_y, next_track_point_pos[0] - self.center_x)
 
         '''
         angle_diff = degrees(desired_angle)
@@ -71,13 +71,36 @@ class BasicBot(arc.Sprite):
         self.angle -= direction
         '''
 
-        self.desired_angle = desired_angle + (pi/2)  # for debugging
-        self.angle = degrees(desired_angle)
+        self.desired_angle = desired_angle  # for debugging
+
+        print(degrees(desired_angle), self.angle - degrees(desired_angle - (pi/2)) - 360)
+
+        # This works
+        # self.angle -= (self.angle - degrees(desired_angle - (pi/2)))
+
+        # This doesn't-ish
+        angle = self.angle - degrees(desired_angle - (pi/2)) - 360
+
+        if angle < 0:
+            self.angle -= angle
+        elif angle > 0:
+            self.angle += angle
 
         self.accelerate()
 
         self.center_x += -self.change_y * sin(radians(self.angle))
         self.center_y += self.change_y * cos(radians(self.angle))
+
+        # Keep in bounds
+        if self.center_x < 0:
+            self.center_x = 0
+        if self.center_y < 0:
+            self.center_y = 0
+
+        if self.center_x > CELL_GRID_WIDTH:
+            self.center_x = CELL_GRID_WIDTH
+        if self.center_y > CELL_GRID_HEIGHT:
+            self.center_y = CELL_GRID_HEIGHT
 
         self.change_x = 0
         self.change_y = 0
