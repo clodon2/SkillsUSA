@@ -30,6 +30,7 @@ def new_track(game):
 
     game.scene.add_sprite_list_after("bots", "player")
 
+    # bots
     bot = BasicBot(walls=game.scene["cells"], track_points=game.track_points)
     bot.center_x = 2 * CELL_WIDTH
     bot.center_y = (GRID_HEIGHT / 2) * CELL_HEIGHT

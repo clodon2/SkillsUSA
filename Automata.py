@@ -75,7 +75,10 @@ def track_kill(grid):
     last_target = (int(mid_row), 0)
     for p in range(TRACK_KILL_POINT_AMOUNT + 1):
         # calculate where a point should be
-        target_point = (randrange(2, rows - 2, 1), current_column)
+        if p == 0:
+            target_point = (int(mid_row), current_column)
+        else:
+            target_point = (randrange(2, rows - 2, 1), current_column)
         current_column += int(usable_columns/TRACK_KILL_POINT_AMOUNT)
 
         targets.append(target_point)
