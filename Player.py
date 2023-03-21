@@ -17,14 +17,18 @@ class BasicPlayer(arc.Sprite):
             self.speed = PLAYER_MAX_SPEED
 
     def backwards_accelerate(self):
-        if self.speed > -PLAYER_MAX_SPEED:
-            self.speed -= PLAYER_ACCELERATION_SPEED
-        if self.speed < -PLAYER_MAX_SPEED:
-            self.speed = -PLAYER_MAX_SPEED
+        if self.speed > -PLAYER_BACK_MAX_SPEED:
+            self.speed -= PLAYER_BACK_ACCELERATION_SPEED
+        if self.speed < -PLAYER_BACK_MAX_SPEED:
+            self.speed = -PLAYER_BACK_MAX_SPEED
 
     def update(self):
         self.center_x += -self.speed * sin(radians(self.angle))
         self.center_y += self.speed * cos(radians(self.angle))
+
+        # drifting around turns if above certain speed
+        if self.speed > PLAYER_DRIFT_SPEED:
+            self.center_y += self.change_angle * sin(radians(self.angle))
 
         # Keep player in bounds
         if self.center_x < 0:

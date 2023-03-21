@@ -123,13 +123,9 @@ class GameView(arc.View):
             self.player.change_angle = 0
         elif self.move_right and not self.move_left:
             rotation = -PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player)
-            if self.move_down:
-                rotation = PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player)
             self.player.change_angle = rotation
         elif self.move_left and not self.move_right:
             rotation = PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player)
-            if self.move_down:
-                rotation = -PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player)
             self.player.change_angle = rotation
         elif not self.move_left and not self.move_right:
             self.player.change_angle = 0
