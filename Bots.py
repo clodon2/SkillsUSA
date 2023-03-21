@@ -41,7 +41,6 @@ class BasicBot(arc.Sprite):
         self.change_y = self.max_speed
 
     def update(self):
-        closest_wall = get_closest_wall(self, self.walls)
 
         if self.last_track_point + 1 == len(self.track_points):
             self.kill()
@@ -56,7 +55,6 @@ class BasicBot(arc.Sprite):
         self.angle %= 360
 
         desired_angle = atan2(next_track_point_pos[1] - self.center_y, next_track_point_pos[0] - self.center_x) - (pi/2)
-        print(degrees(desired_angle), next_track_point_pos, (self.center_x, self.center_y))
 
         '''
         angle_diff = degrees(desired_angle)

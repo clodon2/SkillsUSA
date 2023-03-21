@@ -115,13 +115,11 @@ class GameView(arc.View):
             self.move_right = False
 
         if self.move_up and not self.move_down:
-            self.player.change_y = PLAYER_MOVEMENT_SPEED
+            self.player.accelerate()
         elif self.move_down and not self.move_up:
-            self.player.change_y -= PLAYER_MOVEMENT_SPEED
-        elif not self.move_up and not self.move_down:
-            self.player.change_y = 0
+            self.player.backwards_accelerate()
 
-        if self.player.change_y == 0 and self.player.change_x == 0:
+        if self.player.speed == 0 and self.player.speed == 0:
             self.player.change_angle = 0
         elif self.move_right and not self.move_left:
             rotation = -PLAYER_ROTATION_SPEED
@@ -307,6 +305,7 @@ class GameView(arc.View):
         '''''
 
     def on_update(self, delta_time: float):
+        print(arcade.get_fps(30))
         self.process_keychange()
         self.scene.update()
         self.physics_engine.update()
