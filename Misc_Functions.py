@@ -1,4 +1,5 @@
 import arcade as arc
+from Globals import *
 from random import randrange
 from os import walk
 from math import sqrt
@@ -43,3 +44,7 @@ def get_closest_wall(object, walls):
             closest_wall_dist = wall_dist
 
     return closest_wall
+
+
+def get_turn_multiplier(player):
+    return player.speed / (PLAYER_MAX_SPEED / 1.5)

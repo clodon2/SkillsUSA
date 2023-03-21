@@ -3,7 +3,7 @@ import arcade as arc
 from Globals import *
 import Levels as lvl
 from World_Objects import Drill
-from Misc_Functions import IsRectCollidingWithPoint
+from Misc_Functions import IsRectCollidingWithPoint, get_turn_multiplier
 from Menus import start_menu
 from math import radians, sin, cos
 
@@ -122,14 +122,14 @@ class GameView(arc.View):
         if self.player.speed == 0 and self.player.speed == 0:
             self.player.change_angle = 0
         elif self.move_right and not self.move_left:
-            rotation = -PLAYER_ROTATION_SPEED * (self.player.speed / (PLAYER_MAX_SPEED / 2))
+            rotation = -PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player)
             if self.move_down:
-                rotation = PLAYER_ROTATION_SPEED * (self.player.speed / (PLAYER_MAX_SPEED / 2))
+                rotation = PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player)
             self.player.change_angle = rotation
         elif self.move_left and not self.move_right:
-            rotation = PLAYER_ROTATION_SPEED * (self.player.speed / (PLAYER_MAX_SPEED / 2))
+            rotation = PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player)
             if self.move_down:
-                rotation = -PLAYER_ROTATION_SPEED * (self.player.speed / (PLAYER_MAX_SPEED / 2))
+                rotation = -PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player)
             self.player.change_angle = rotation
         elif not self.move_left and not self.move_right:
             self.player.change_angle = 0
