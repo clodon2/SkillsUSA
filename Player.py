@@ -5,10 +5,11 @@ from math import radians, sin, cos
 
 class BasicPlayer(arc.Sprite):
     def __init__(self):
-        super().__init__("./Assets/Player/Audi.png")
+        super().__init__("./Assets/Player/playercar.png")
         self.scale = .3
         self.angle = -90
         self.speed = 0
+        self.power_up = None
 
     def accelerate(self):
         if self.speed < PLAYER_MAX_SPEED:

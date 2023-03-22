@@ -16,7 +16,7 @@ class Car(arc.Sprite):
 
 class BasicBot(arc.Sprite):
     def __init__(self, walls, track_points):
-        super().__init__("./Assets/Player/Audi.png")
+        super().__init__("./Assets/Enemy/enemycar.png")
 
         self.scale = .3
         self.angle = -90

@@ -140,7 +140,7 @@ class GameView(arc.View):
         elif not self.move_left and not self.move_right:
             self.player.change_angle = 0
 
-        if self.powerup_pressed:
+        if self.powerup_pressed and self.player.power_up == "drill":
             self.powerup_pressed = False
             new_drill = Drill(launch_angle=self.player.angle)
             new_drill.center_x = self.player.center_x
