@@ -54,3 +54,9 @@ class Drill(PowerUp):
     def update_animation(self, delta_time: float = 1 / 60):
         self.cur_frame += .5
         self.texture = self.animation[round(round(self.cur_frame) % len(self.animation))]
+
+
+class EndEntrance(arc.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.texture = arc.load_texture("Assets/Other/sunlight.png")

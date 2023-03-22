@@ -365,6 +365,11 @@ class GameView(arc.View):
             self.player.power_up = "drill"
             box.kill()
 
+        # player-exit interaction
+        exit_collisions = arc.check_for_collision_with_list(self.player, self.scene["exit"])
+        if exit_collisions:
+            self.load_level()
+
         # powerup interactions
         for powerup in self.scene["powerups"]:
             if powerup.type == "drill":

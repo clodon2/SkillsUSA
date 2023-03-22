@@ -6,7 +6,7 @@ from random import randrange
 from Automata import generate_random_grid, run_sim, generate_track
 from Bots import BasicBot
 from Player import BasicPlayer
-from World_Objects import PowerUpBox
+from World_Objects import PowerUpBox, EndEntrance
 from math import sin, cos
 
 
@@ -29,6 +29,16 @@ def new_track(game):
         box.center_x = game.track_points[box_point][1] * CELL_WIDTH
         box.center_y = game.track_points[box_point][0] * CELL_HEIGHT
         game.scene.add_sprite("power_boxes", box)
+
+    # spawn in end of level
+    game.scene.add_sprite_list_after("exit", "cells")
+    last_point = game.track_points[-1]
+
+    end_level = EndEntrance()
+    end_level.center_x = last_point[1] * CELL_WIDTH
+    end_level.center_y = last_point[0] * CELL_HEIGHT
+
+    game.scene.add_sprite("exit", end_level)
 
     # player
     game.scene.add_sprite_list_after("player", "cells")
