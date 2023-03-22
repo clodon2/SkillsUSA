@@ -128,3 +128,43 @@ def start_menu(view):
 
     view.mouse_pos = 0, 0
     view.window.set_mouse_visible(True)
+
+
+def controls_menu(view):
+    # Setup the Cameras
+    view.camera = arc.Camera(view.width, view.height)
+    # needed to load buttons and text
+    view.text_list = []
+    view.button_list = []
+
+    # example stuff
+    startbutton = BasicButton("BACK", location=(50 * SCREEN_PERCENT, SCREEN_HEIGHT / 1.12),
+                                 size=(100, 100), id='back', font="ARCADECLASSIC")
+
+    title = BasicText("Controls", location=(MID_SCREEN, SCREEN_HEIGHT / 1.2),
+                      textsize=60, font="ARCADECLASSIC")
+
+    test_objs = [
+                 BasicText("Forward - W/Up Arrow/Right Trigger", location=(MID_SCREEN, SCREEN_HEIGHT / 1.4),
+                           textsize=30, font="ARCADECLASSIC"),
+
+                 BasicText("Backward - S/Down Arrow/Left Trigger", location=(MID_SCREEN, SCREEN_HEIGHT / 1.55),
+                           textsize=30, font="ARCADECLASSIC"),
+
+                 BasicText("Right - D/Right Arrow/Left Joystick", location=(MID_SCREEN, SCREEN_HEIGHT / 1.7),
+                           textsize=30, font="ARCADECLASSIC"),
+
+                 BasicText("Left - A/Right Arrow/Left Joystick", location=(MID_SCREEN, SCREEN_HEIGHT / 1.85),
+                           textsize=30, font="ARCADECLASSIC"),
+
+                 BasicText("Powerup - Space/X (left) button", location=(MID_SCREEN, SCREEN_HEIGHT / 2.05),
+                           textsize=30, font="ARCADECLASSIC"),
+    ]
+
+    # should probably make an easier way to do this
+    view.button_list.append(startbutton)
+    view.text_list.append(title)
+    view.text_list.extend(test_objs)
+
+    view.mouse_pos = 0, 0
+    view.window.set_mouse_visible(True)

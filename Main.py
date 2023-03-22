@@ -4,7 +4,7 @@ from Globals import *
 import Levels as lvl
 from World_Objects import Drill
 from Misc_Functions import IsRectCollidingWithPoint, get_turn_multiplier
-from Menus import start_menu
+from Menus import start_menu, controls_menu
 from math import radians, sin, cos
 
 
@@ -40,6 +40,43 @@ class MainMenu(arc.View):
                 if button.id == "start":
                     game_view = GameView()
                     self.window.show_view(game_view)
+                if button.id == "controls":
+                    controls_view = ControlsView()
+                    self.window.show_view(controls_view)
+
+
+class ControlsView(arc.View):
+    def __init__(self):
+        super().__init__()
+        self.width = SCREEN_WIDTH
+        self.height = SCREEN_HEIGHT
+
+        self.scene = None
+
+        self.camera = None
+        self.button_list = []
+        self.text_list = []
+
+    def on_show_view(self):
+        controls_menu(self)
+
+    def on_draw(self):
+        arc.draw_xywh_rectangle_filled(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color=arc.color.DARK_SLATE_GRAY)
+
+        for button in self.button_list:
+            button.update()
+        for text in self.text_list:
+            try:
+                text.update()
+            except:
+                text.draw()
+
+    def on_mouse_press(self, mouse_x: int, mouse_y: int, button: int, modifiers: int):
+        for button in self.button_list:
+            if IsRectCollidingWithPoint(button.get_rect(), (mouse_x, mouse_y)):
+                if button.id == "back":
+                    menu_view = MainMenu()
+                    self.window.show_view(menu_view)
 
 
 class GameView(arc.View):
