@@ -2,9 +2,11 @@ import arcade
 
 from Globals import *
 import arcade as arc
+from random import randrange
 from Automata import generate_random_grid, run_sim, generate_track
 from Bots import BasicBot
 from Player import BasicPlayer
+from World_Objects import PowerUpBox
 from math import sin, cos
 
 
@@ -16,6 +18,17 @@ def new_track(game):
     game.grid, game.track_points = generate_track(GRID_WIDTH, GRID_HEIGHT)
 
     load_track(game)
+
+    # spawn in powerup boxes
+    game.scene.add_sprite_list_after("power_boxes", "cells", use_spatial_hash=True)
+    spawn_amount = int((len(game.track_points) - 1) / 4)
+
+    for box in range(spawn_amount):
+        box_point = randrange(2, len(game.track_points) - 1, 1)
+        box = PowerUpBox()
+        box.center_x = game.track_points[box_point][1] * CELL_WIDTH
+        box.center_y = game.track_points[box_point][0] * CELL_HEIGHT
+        game.scene.add_sprite("power_boxes", box)
 
     # player
     game.scene.add_sprite_list_after("player", "cells")

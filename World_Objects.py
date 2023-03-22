@@ -12,6 +12,13 @@ class PowerUp(arc.Sprite):
         self.cur_frame = 0
 
 
+class PowerUpBox(arc.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.texture = arc.load_texture(":resources:images/tiles/boxCrate_single.png")
+        self.scale = .3
+
+
 class Drill(PowerUp):
     def __init__(self, launch_angle):
         super().__init__()
@@ -20,7 +27,7 @@ class Drill(PowerUp):
         self.texture = arc.load_texture("Assets/Powerups/drill/drill1.png")
         self.set_hit_box(self.texture.hit_box_points)
 
-        self.scale = .3
+        self.scale = .5
         self.angle = launch_angle + 90
 
         self.change_x = DRILL_SPEED

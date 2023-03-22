@@ -179,6 +179,7 @@ class GameView(arc.View):
 
         if self.powerup_pressed and self.player.power_up == "drill":
             self.powerup_pressed = False
+            self.player.power_up = None
             new_drill = Drill(launch_angle=self.player.angle)
             new_drill.center_x = self.player.center_x
             new_drill.center_y = self.player.center_y
@@ -357,6 +358,12 @@ class GameView(arc.View):
         for phy in self.bot_physics:
             phy.update()
         self.center_camera_to_player()
+
+        # player-power up box interaction
+        collisions = arc.check_for_collision_with_list(self.player, self.scene["power_boxes"])
+        for box in collisions:
+            self.player.power_up = "drill"
+            box.kill()
 
         # powerup interactions
         for powerup in self.scene["powerups"]:
