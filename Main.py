@@ -1,6 +1,7 @@
 import arcade
 import arcade as arc
-from Globals import *
+
+import Globals
 import Levels as lvl
 from World_Objects import Drill
 from Misc_Functions import IsRectCollidingWithPoint, get_turn_multiplier
@@ -11,8 +12,8 @@ from math import radians, sin, cos
 class MainMenu(arc.View):
     def __init__(self):
         super().__init__()
-        self.width = SCREEN_WIDTH
-        self.height = SCREEN_HEIGHT
+        self.width = Globals.SCREEN_WIDTH
+        self.height = Globals.SCREEN_HEIGHT
 
         self.scene = None
 
@@ -23,8 +24,14 @@ class MainMenu(arc.View):
     def on_show_view(self):
         start_menu(self)
 
+    def on_resize(self, width: int, height: int):
+        self.window.set_viewport(0, width, 0, height)
+        Globals.resize_screen(width, height)
+        self.__init__()
+        self.on_show_view()
+
     def on_draw(self):
-        arc.draw_xywh_rectangle_filled(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color=arc.color.DARK_SLATE_GRAY)
+        arc.draw_xywh_rectangle_filled(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT, color=arc.color.DARK_SLATE_GRAY)
 
         for button in self.button_list:
             button.update()
@@ -48,8 +55,8 @@ class MainMenu(arc.View):
 class ControlsView(arc.View):
     def __init__(self):
         super().__init__()
-        self.width = SCREEN_WIDTH
-        self.height = SCREEN_HEIGHT
+        self.width = Globals.SCREEN_WIDTH
+        self.height = Globals.SCREEN_HEIGHT
 
         self.scene = None
 
@@ -60,8 +67,14 @@ class ControlsView(arc.View):
     def on_show_view(self):
         controls_menu(self)
 
+    def on_resize(self, width: int, height: int):
+        self.window.set_viewport(0, width, 0, height)
+        Globals.resize_screen(width, height)
+        self.__init__()
+        self.on_show_view()
+
     def on_draw(self):
-        arc.draw_xywh_rectangle_filled(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, color=arc.color.DARK_SLATE_GRAY)
+        arc.draw_xywh_rectangle_filled(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT, color=arc.color.DARK_SLATE_GRAY)
 
         for button in self.button_list:
             button.update()
@@ -82,16 +95,16 @@ class ControlsView(arc.View):
 class GameView(arc.View):
     def __init__(self):
         super().__init__()
-        self.width = SCREEN_WIDTH
-        self.height = SCREEN_HEIGHT
+        self.width = Globals.SCREEN_WIDTH
+        self.height = Globals.SCREEN_HEIGHT
 
         self.scene = None
 
         self.camera = None
         self.view_left = 0
         self.view_bottom = 0
-        self.end_of_map = CELL_GRID_WIDTH
-        self.map_height = CELL_GRID_HEIGHT
+        self.end_of_map = Globals.CELL_GRID_WIDTH
+        self.map_height = Globals.CELL_GRID_HEIGHT
 
         self.player = None
 
@@ -132,6 +145,9 @@ class GameView(arc.View):
     def process_keychange(self):
         # print(self.controller.x)
 
+        if self.player is None:
+            return
+
         if self.controller:
             self.thumbstick_rotation = self.controller.x
         else:
@@ -148,12 +164,12 @@ class GameView(arc.View):
         else:
             self.move_down = False
 
-        if self.a_pressed or self.left_pressed or self.thumbstick_rotation < -DEADZONE:
+        if self.a_pressed or self.left_pressed or self.thumbstick_rotation < -Globals.DEADZONE:
             self.move_left = True
         else:
             self.move_left = False
 
-        if self.d_pressed or self.right_pressed or self.thumbstick_rotation > DEADZONE:
+        if self.d_pressed or self.right_pressed or self.thumbstick_rotation > Globals.DEADZONE:
             self.move_right = True
         else:
             self.move_right = False
@@ -171,9 +187,9 @@ class GameView(arc.View):
         if self.player.speed == 0 and self.player.speed == 0:
             self.player.change_angle = 0
         elif self.move_right and not self.move_left:
-            self.player.change_angle = -PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player.speed) * controller_rotation_mult
+            self.player.change_angle = -Globals.PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player.speed) * controller_rotation_mult
         elif self.move_left and not self.move_right:
-            self.player.change_angle = PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player.speed) * controller_rotation_mult
+            self.player.change_angle = Globals.PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player.speed) * controller_rotation_mult
         elif not self.move_left and not self.move_right:
             self.player.change_angle = 0
 
@@ -279,7 +295,15 @@ class GameView(arc.View):
     def load_level(self):
         lvl.new_track(self)
 
+    def on_resize(self, width: int, height: int):
+        Globals.resize_screen(width, height)
+        self.__init__()
+        self.on_show_view()
+
     def on_draw(self):
+        if self.camera is None:
+            return
+
         self.camera.use()
 
         arc.draw_rectangle_filled(self.camera.position.x + self.camera.viewport_width / 2,
@@ -291,32 +315,31 @@ class GameView(arc.View):
         '''
         for bot in self.scene["bots"]:
             arc.draw_line(bot.center_x, bot.center_y, bot.center_x + 100 * cos(bot.desired_angle), bot.center_y + 100 * sin(bot.desired_angle), (0, 0, 255), 10)
-    
+        '''
         i = 0
         for point in self.track_points:
             i += 1
-            arc.draw_circle_filled(point[1] * CELL_HEIGHT + GRID_BL_POS[1], point[0] * CELL_WIDTH + GRID_BL_POS[0], 10, (0, 255, 0))
-            arc.draw_text(str(i), point[1] * CELL_HEIGHT + GRID_BL_POS[1], point[0] * CELL_WIDTH + GRID_BL_POS[0])
-        '''
+            arc.draw_circle_filled(point[1] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1], point[0] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0], 10, (0, 255, 0))
+            arc.draw_text(str(i), point[1] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1], point[0] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0])
 
     def center_camera_to_player(self):
         # Scroll left
-        left_boundary = self.view_left + LEFT_VIEWPORT_MARGIN
+        left_boundary = self.view_left + Globals.LEFT_VIEWPORT_MARGIN
         if self.player.left < left_boundary:
             self.view_left -= left_boundary - self.player.left
 
         # Scroll right
-        right_boundary = self.view_left + self.width - RIGHT_VIEWPORT_MARGIN
+        right_boundary = self.view_left + self.width - Globals.RIGHT_VIEWPORT_MARGIN
         if self.player.right > right_boundary:
             self.view_left += self.player.right - right_boundary
 
         # Scroll up
-        top_boundary = self.view_bottom + self.height - TOP_VIEWPORT_MARGIN
+        top_boundary = self.view_bottom + self.height - Globals.TOP_VIEWPORT_MARGIN
         if self.player.top > top_boundary:
             self.view_bottom += self.player.top - top_boundary
 
         # Scroll down
-        bottom_boundary = self.view_bottom + BOTTOM_VIEWPORT_MARGIN
+        bottom_boundary = self.view_bottom + Globals.BOTTOM_VIEWPORT_MARGIN
         if self.player.bottom < bottom_boundary:
             self.view_bottom -= bottom_boundary - self.player.bottom
 
@@ -338,7 +361,7 @@ class GameView(arc.View):
 
         # Scroll to the proper location
         position = self.view_left, self.view_bottom
-        self.camera.move_to(position, CAMERA_SPEED)
+        self.camera.move_to(position, Globals.CAMERA_SPEED)
 
         # OLD
         '''''
@@ -351,6 +374,10 @@ class GameView(arc.View):
         '''''
 
     def on_update(self, delta_time: float):
+
+        if not self.player or not self.physics_engine:
+            return
+
         # print(arcade.get_fps(30))
         self.process_keychange()
         self.scene.update()
@@ -379,7 +406,7 @@ class GameView(arc.View):
 
 def main():
     """Main function"""
-    window = arc.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, fullscreen=False, resizable=True)
+    window = arc.Window(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT, Globals.SCREEN_TITLE, fullscreen=False, resizable=True)
     start_view = MainMenu()
     window.show_view(start_view)
     arc.run()

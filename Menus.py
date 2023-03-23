@@ -1,5 +1,5 @@
 import arcade as arc
-from Globals import *
+import Globals
 
 
 # basic button, meant for demos
@@ -10,14 +10,14 @@ class BasicButton:
         self.id = id
         self.text = text
 
-        size = (size[0] * SCREEN_PERCENTS[0], size[1] * SCREEN_PERCENTS[1])
+        size = (size[0] * Globals.SCREEN_PERCENTS[0], size[1] * Globals.SCREEN_PERCENTS[1])
 
         # scaling values
         base_b_size = (400, 100)
         b_scales = (size[0] / base_b_size[0], size[1] / base_b_size[1])
         b_scale = (b_scales[0] + b_scales[1]) / 2
 
-        self.text_size = DEFAULT_FONT_SIZE * b_scale
+        self.text_size = Globals.DEFAULT_FONT_SIZE * b_scale
 
         base = arc.create_rectangle_filled(location[0], location[1], size[0], size[1], color, tilt)
         self.basepoints = arc.get_rectangle_points(location[0], location[1], size[0], size[1], tilt)
@@ -43,9 +43,9 @@ class TexturedButton:
     def __init__(self, text, sprite, location,
                  textcolor=arc.csscolor.WHITE,
                  tilt=0, animated=False, scale=1,
-                 font="Arial", font_size=DEFAULT_FONT_SIZE,
+                 font="Arial", font_size=Globals.DEFAULT_FONT_SIZE,
                  y_offset=0, id='none'):
-        font_size = font_size * SCREEN_PERCENT
+        font_size = font_size * Globals.SCREEN_PERCENT
 
         self.animated = animated
         self.location = location
@@ -93,12 +93,12 @@ class TexturedButton:
 
 class BasicText:
     def __init__(self, text, location,
-                 textsize=DEFAULT_FONT_SIZE,
+                 textsize=Globals.DEFAULT_FONT_SIZE,
                  text_color=arc.color.BLACK, font='arial'):
-        self.text_size = textsize * SCREEN_PERCENT
+        self.text_size = textsize * Globals.SCREEN_PERCENT
         text_y = location[1] - self.text_size/2
         self.text = arc.Text(text, location[0], text_y,
-                             text_color, self.text_size, font_name=font, multiline=True, width=(SCREEN_WIDTH - (SCREEN_WIDTH / 20)))
+                             text_color, self.text_size, font_name=font, multiline=True, width=(Globals.SCREEN_WIDTH - (Globals.SCREEN_WIDTH / 20)))
         self.text.x = location[0] - self.text.content_width/2
 
     def update(self):
@@ -113,13 +113,13 @@ def start_menu(view):
     view.button_list = []
 
     # example stuff
-    startbutton = BasicButton("START", location=(MID_SCREEN, SCREEN_HEIGHT / 2),
+    startbutton = BasicButton("START", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 2),
                                  size=(300, 110), id='start', font="ARCADECLASSIC")
-    controlsbutton = BasicButton("CONTROLS", location=(MID_SCREEN, SCREEN_HEIGHT / 4.5),
+    controlsbutton = BasicButton("CONTROLS", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 4.5),
                                     size=(300, 110), id='controls', font="ARCADECLASSIC")
 
-    title = BasicText("Cave Racer", location=(MID_SCREEN, SCREEN_HEIGHT / 1.2),
-                      textsize=60, font="ARCADECLASSIC")
+    title = BasicText("Cave Racer", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.2),
+                      textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
 
     # should probably make an easier way to do this
     view.button_list.append(startbutton)
@@ -138,27 +138,27 @@ def controls_menu(view):
     view.button_list = []
 
     # example stuff
-    startbutton = BasicButton("BACK", location=(50 * SCREEN_PERCENT, SCREEN_HEIGHT / 1.12),
+    startbutton = BasicButton("BACK", location=(50 * Globals.SCREEN_PERCENT, Globals.SCREEN_HEIGHT / 1.12),
                                  size=(100, 100), id='back', font="ARCADECLASSIC")
 
-    title = BasicText("Controls", location=(MID_SCREEN, SCREEN_HEIGHT / 1.2),
-                      textsize=60, font="ARCADECLASSIC")
+    title = BasicText("Controls", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.2),
+                      textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
 
     test_objs = [
-                 BasicText("Forward - W/Up Arrow/Right Trigger", location=(MID_SCREEN, SCREEN_HEIGHT / 1.4),
-                           textsize=30, font="ARCADECLASSIC"),
+                 BasicText("Forward - W/Up Arrow/Right Trigger", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.4),
+                           textsize=30, font="ARCADECLASSIC", text_color=arc.color.WHITE),
 
-                 BasicText("Backward - S/Down Arrow/Left Trigger", location=(MID_SCREEN, SCREEN_HEIGHT / 1.55),
-                           textsize=30, font="ARCADECLASSIC"),
+                 BasicText("Backward - S/Down Arrow/Left Trigger", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.55),
+                           textsize=30, font="ARCADECLASSIC", text_color=arc.color.WHITE),
 
-                 BasicText("Right - D/Right Arrow/Left Joystick", location=(MID_SCREEN, SCREEN_HEIGHT / 1.7),
-                           textsize=30, font="ARCADECLASSIC"),
+                 BasicText("Right - D/Right Arrow/Left Joystick", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.7),
+                           textsize=30, font="ARCADECLASSIC", text_color=arc.color.WHITE),
 
-                 BasicText("Left - A/Right Arrow/Left Joystick", location=(MID_SCREEN, SCREEN_HEIGHT / 1.85),
-                           textsize=30, font="ARCADECLASSIC"),
+                 BasicText("Left - A/Right Arrow/Left Joystick", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.85),
+                           textsize=30, font="ARCADECLASSIC", text_color=arc.color.WHITE),
 
-                 BasicText("Powerup - Space/X (left) button", location=(MID_SCREEN, SCREEN_HEIGHT / 2.05),
-                           textsize=30, font="ARCADECLASSIC"),
+                 BasicText("Powerup - Space/X (left) button", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 2.05),
+                           textsize=30, font="ARCADECLASSIC", text_color=arc.color.WHITE),
     ]
 
     # should probably make an easier way to do this

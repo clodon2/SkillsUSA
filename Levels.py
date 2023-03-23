@@ -1,6 +1,6 @@
 import arcade
 
-from Globals import *
+import Globals
 import arcade as arc
 from random import randrange
 from Automata import generate_random_grid, run_sim, generate_track
@@ -15,7 +15,7 @@ def new_track(game):
 
     # load in track
     game.scene.add_sprite_list("cells", use_spatial_hash=True)
-    game.grid, game.track_points = generate_track(GRID_WIDTH, GRID_HEIGHT)
+    game.grid, game.track_points = generate_track(Globals.GRID_WIDTH, Globals.GRID_HEIGHT)
 
     load_track(game)
 
@@ -26,8 +26,8 @@ def new_track(game):
     for box in range(spawn_amount):
         box_point = randrange(2, len(game.track_points) - 1, 1)
         box = PowerUpBox()
-        box.center_x = game.track_points[box_point][1] * CELL_WIDTH
-        box.center_y = game.track_points[box_point][0] * CELL_HEIGHT
+        box.center_x = game.track_points[box_point][1] * Globals.CELL_WIDTH
+        box.center_y = game.track_points[box_point][0] * Globals.CELL_HEIGHT
         game.scene.add_sprite("power_boxes", box)
 
     # spawn in end of level
@@ -35,19 +35,19 @@ def new_track(game):
     last_point = game.track_points[-1]
 
     end_level = EndEntrance()
-    end_level.center_x = last_point[1] * CELL_WIDTH
-    end_level.center_y = last_point[0] * CELL_HEIGHT
+    end_level.center_x = last_point[1] * Globals.CELL_WIDTH
+    end_level.center_y = last_point[0] * Globals.CELL_HEIGHT
 
     game.scene.add_sprite("exit", end_level)
 
     # player
     game.scene.add_sprite_list_after("player", "cells")
 
-    game.camera = arcade.Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
+    game.camera = arcade.Camera(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT)
 
     game.player = BasicPlayer()
-    game.player.center_x = 2 * CELL_WIDTH
-    game.player.center_y = (GRID_HEIGHT / 2) * CELL_HEIGHT
+    game.player.center_x = 2 * Globals.CELL_WIDTH
+    game.player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT
     game.scene.add_sprite("player", game.player)
     game.physics_engine = arc.PhysicsEngineSimple(game.player, game.scene.get_sprite_list("cells"))
 
@@ -55,8 +55,8 @@ def new_track(game):
 
     # bots
     bot = BasicBot(walls=game.scene["cells"], track_points=game.track_points)
-    bot.center_x = 2 * CELL_WIDTH
-    bot.center_y = (GRID_HEIGHT / 2) * CELL_HEIGHT
+    bot.center_x = 2 * Globals.CELL_WIDTH
+    bot.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT
     game.scene.add_sprite("bots", bot)
     bot_physics = arc.PhysicsEngineSimple(bot, game.scene.get_sprite_list("cells"))
     game.bot_physics.append(bot_physics)
@@ -68,24 +68,24 @@ def load_track(game):
     for r in range(len(game.grid)):
         for c in range(len(game.grid[0])):
             if game.grid[r][c] == 1:
-                cell_shade = int((sin(r / CELL_COLOR_GRANULARITY) + sin(c / CELL_COLOR_GRANULARITY) + 2) / 4 * (CELL_COLOR_MAX - CELL_COLOR_MIN)) + CELL_COLOR_MIN
-                cell = arc.SpriteSolidColor(width=CELL_WIDTH, height=CELL_HEIGHT, color=(cell_shade, cell_shade, cell_shade))
-                cell.center_x = c * CELL_WIDTH + GRID_BL_POS[0]
-                cell.center_y = r * CELL_HEIGHT + GRID_BL_POS[1]
+                cell_shade = int((sin(r / Globals.CELL_COLOR_GRANULARITY) + sin(c / Globals.CELL_COLOR_GRANULARITY) + 2) / 4 * (Globals.CELL_COLOR_MAX - Globals.CELL_COLOR_MIN)) + Globals.CELL_COLOR_MIN
+                cell = arc.SpriteSolidColor(width=int(Globals.CELL_WIDTH), height=int(Globals.CELL_HEIGHT), color=(cell_shade, cell_shade, cell_shade))
+                cell.center_x = c * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0]
+                cell.center_y = r * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1]
                 game.scene.add_sprite("cells", cell)
 
 
 def setup_level(game):
     game.scene = arc.Scene()
     game.scene.add_sprite_list("cells", use_spatial_hash=True)
-    game.grid = generate_random_grid(GRID_WIDTH, GRID_HEIGHT)
+    game.grid = generate_random_grid(Globals.GRID_WIDTH, Globals.GRID_HEIGHT)
 
     for r in range(len(game.grid)):
         for c in range(len(game.grid[0])):
             if game.grid[r][c] == 1:
-                cell = arc.SpriteSolidColor(width=CELL_WIDTH, height=CELL_HEIGHT, color=arc.color.BLUE)
-                cell.center_x = c * CELL_WIDTH + GRID_BL_POS[0]
-                cell.center_y = r * CELL_HEIGHT + GRID_BL_POS[1]
+                cell = arc.SpriteSolidColor(width=Globals.CELL_WIDTH, height=Globals.CELL_HEIGHT, color=arc.color.BLUE)
+                cell.center_x = c * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0]
+                cell.center_y = r * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1]
                 game.scene.add_sprite("cells", cell)
 
 
@@ -96,7 +96,7 @@ def update_level(game):
     for r in range(len(game.grid)):
         for c in range(len(game.grid[0])):
             if game.grid[r][c] == 1:
-                cell = arc.SpriteSolidColor(width=CELL_WIDTH, height=CELL_HEIGHT, color=arc.color.BLUE)
-                cell.center_x = c * CELL_WIDTH + GRID_BL_POS[0]
-                cell.center_y = r * CELL_HEIGHT + GRID_BL_POS[1]
+                cell = arc.SpriteSolidColor(width=Globals.CELL_WIDTH, height=Globals.CELL_HEIGHT, color=arc.color.BLUE)
+                cell.center_x = c * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0]
+                cell.center_y = r * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1]
                 game.scene.add_sprite("cells", cell)

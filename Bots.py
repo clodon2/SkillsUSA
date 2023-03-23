@@ -1,6 +1,5 @@
 import arcade as arc
-from Globals import *
-from Misc_Functions import get_closest_wall
+import Globals
 from math import sin, cos, radians, degrees, sqrt, atan2, pi, copysign
 
 
@@ -18,7 +17,7 @@ class BasicBot(arc.Sprite):
     def __init__(self, walls, track_points):
         super().__init__("./Assets/Enemy/enemycar.png")
 
-        self.scale = .3
+        self.scale = .3 * Globals.SCREEN_PERCENT
         self.angle = -90
 
         self.desired_angle = 0
@@ -27,11 +26,11 @@ class BasicBot(arc.Sprite):
         self.track_points = track_points
         self.last_track_point = -1
 
-        self.wall_closeness = CELL_HEIGHT * 1.5
+        self.wall_closeness = Globals.CELL_HEIGHT * 1.5
 
         self.speed = 0
 
-        self.max_speed = BOT_MAX_SPEED
+        self.max_speed = Globals.BOT_MAX_SPEED
 
     def accelerate(self):
         '''
@@ -47,9 +46,9 @@ class BasicBot(arc.Sprite):
             return
 
         next_track_point = self.track_points[self.last_track_point + 1]
-        next_track_point_pos = (next_track_point[1] * CELL_HEIGHT + GRID_BL_POS[1], next_track_point[0] * CELL_WIDTH + GRID_BL_POS[0])
+        next_track_point_pos = (next_track_point[1] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1], next_track_point[0] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0])
 
-        if sqrt(abs(next_track_point_pos[0] - self.center_x)**2 + abs(next_track_point_pos[1] - self.center_y)**2) < 5 * CELL_HEIGHT:
+        if sqrt(abs(next_track_point_pos[0] - self.center_x)**2 + abs(next_track_point_pos[1] - self.center_y)**2) < 5 * Globals.CELL_HEIGHT:
             self.last_track_point += 1
 
         self.angle %= 360
@@ -66,10 +65,10 @@ class BasicBot(arc.Sprite):
         # This doesn't-ish
         angle = self.angle - degrees(desired_angle - (pi/2)) - 360
 
-        if angle < -BOT_MIN_TURN_ANGLE:
-            self.angle += PLAYER_ROTATION_SPEED  # angle
-        elif angle > BOT_MIN_TURN_ANGLE:
-            self.angle -= PLAYER_ROTATION_SPEED  # angle
+        if angle < -Globals.BOT_MIN_TURN_ANGLE:
+            self.angle += Globals.PLAYER_ROTATION_SPEED  # angle
+        elif angle > Globals.BOT_MIN_TURN_ANGLE:
+            self.angle -= Globals.PLAYER_ROTATION_SPEED  # angle
 
         self.accelerate()
 
@@ -82,10 +81,10 @@ class BasicBot(arc.Sprite):
         if self.center_y < 0:
             self.center_y = 0
 
-        if self.center_x > CELL_GRID_WIDTH:
-            self.center_x = CELL_GRID_WIDTH
-        if self.center_y > CELL_GRID_HEIGHT:
-            self.center_y = CELL_GRID_HEIGHT
+        if self.center_x > Globals.CELL_GRID_WIDTH:
+            self.center_x = Globals.CELL_GRID_WIDTH
+        if self.center_y > Globals.CELL_GRID_HEIGHT:
+            self.center_y = Globals.CELL_GRID_HEIGHT
 
         self.change_x = 0
         self.change_y = 0
