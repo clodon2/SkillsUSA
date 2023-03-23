@@ -56,21 +56,6 @@ class BasicBot(arc.Sprite):
 
         desired_angle = atan2(next_track_point_pos[1] - self.center_y, next_track_point_pos[0] - self.center_x)
 
-        '''
-        angle_diff = degrees(desired_angle)
-
-        cw_y_dist = self.center_y - closest_wall.center_y
-        cw_x_dist = self.center_x - closest_wall.center_x
-
-        direction = 0
-        if angle_diff > 0:
-            direction = -1
-        elif angle_diff < 0:
-            direction = 1
-
-        self.angle -= direction
-        '''
-
         self.desired_angle = desired_angle  # for debugging
 
         print(degrees(desired_angle), self.angle - degrees(desired_angle - (pi/2)) - 360)
@@ -81,10 +66,10 @@ class BasicBot(arc.Sprite):
         # This doesn't-ish
         angle = self.angle - degrees(desired_angle - (pi/2)) - 360
 
-        if angle < 0:
-            self.angle -= angle
-        elif angle > 0:
-            self.angle += angle
+        if angle < -BOT_MIN_TURN_ANGLE:
+            self.angle += PLAYER_ROTATION_SPEED  # angle
+        elif angle > BOT_MIN_TURN_ANGLE:
+            self.angle -= PLAYER_ROTATION_SPEED  # angle
 
         self.accelerate()
 
