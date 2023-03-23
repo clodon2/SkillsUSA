@@ -46,7 +46,7 @@ class BasicBot(arc.Sprite):
             return
 
         next_track_point = self.track_points[self.last_track_point + 1]
-        next_track_point_pos = (next_track_point[1] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1], next_track_point[0] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0])
+        next_track_point_pos = (next_track_point[1] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[1], next_track_point[0] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[0])
 
         if sqrt(abs(next_track_point_pos[0] - self.center_x)**2 + abs(next_track_point_pos[1] - self.center_y)**2) < 5 * Globals.CELL_HEIGHT:
             self.last_track_point += 1
@@ -57,18 +57,12 @@ class BasicBot(arc.Sprite):
 
         self.desired_angle = desired_angle  # for debugging
 
-        print(degrees(desired_angle), self.angle - degrees(desired_angle - (pi/2)) - 360)
-
-        # This works
-        # self.angle -= (self.angle - degrees(desired_angle - (pi/2)))
-
-        # This doesn't-ish
         angle = self.angle - degrees(desired_angle - (pi/2)) - 360
 
         if angle < -Globals.BOT_MIN_TURN_ANGLE:
-            self.angle += Globals.PLAYER_ROTATION_SPEED  # angle
+            self.angle += Globals.PLAYER_ROTATION_SPEED
         elif angle > Globals.BOT_MIN_TURN_ANGLE:
-            self.angle -= Globals.PLAYER_ROTATION_SPEED  # angle
+            self.angle -= Globals.PLAYER_ROTATION_SPEED
 
         self.accelerate()
 
