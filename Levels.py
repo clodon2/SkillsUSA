@@ -46,7 +46,7 @@ def new_track(game):
 
     game.player = BasicPlayer()
     game.player.center_x = 2 * Globals.CELL_WIDTH
-    game.player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT
+    game.player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT + game.player.width
     game.scene.add_sprite("player", game.player)
     game.physics_engine = arc.PhysicsEngineSimple(game.player, game.scene.get_sprite_list("cells"))
 
@@ -55,7 +55,7 @@ def new_track(game):
     # bots
     bot = BasicBot(walls=game.scene["cells"], track_points=game.track_points)
     bot.center_x = 2 * Globals.CELL_WIDTH
-    bot.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT
+    bot.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT - bot.width
     game.scene.add_sprite("bots", bot)
     bot_physics = arc.PhysicsEngineSimple(bot, game.scene.get_sprite_list("cells"))
     game.bot_physics.append(bot_physics)
