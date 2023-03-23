@@ -7,6 +7,7 @@ from Automata import generate_random_grid, run_sim, generate_track
 from Bots import BasicBot
 from Player import BasicPlayer
 from World_Objects import PowerUpBox, EndEntrance
+from Misc_Functions import get_shade
 from math import sin, cos
 
 
@@ -69,10 +70,11 @@ def load_track(game):
     for r in range(len(game.grid)):
         for c in range(len(game.grid[0])):
             if game.grid[r][c] == 1:
-                cell_shade = int((sin(r / Globals.CELL_COLOR_GRANULARITY) + sin(c / Globals.CELL_COLOR_GRANULARITY) + 2)
-                                 / 4 * (Globals.CELL_COLOR_MAX - Globals.CELL_COLOR_MIN)) + Globals.CELL_COLOR_MIN
+                r_shade = get_shade(r, c, color_range=Globals.R_CELL_COLOR_RANGE)
+                g_shade = get_shade(r, c, color_range=Globals.G_CELL_COLOR_RANGE)
+                c_shade = get_shade(r, c, color_range=Globals.B_CELL_COLOR_RANGE)
                 cell = arc.SpriteSolidColor(width=int(Globals.CELL_WIDTH), height=int(Globals.CELL_HEIGHT),
-                                            color=(cell_shade, cell_shade, cell_shade))
+                                            color=(r_shade, g_shade, c_shade))
                 cell.center_x = c * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0]
                 cell.center_y = r * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1]
                 game.scene.add_sprite("cells", cell)

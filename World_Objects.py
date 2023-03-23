@@ -52,7 +52,7 @@ class Drill(PowerUp):
             self.kill()
 
     def update_animation(self, delta_time: float = 1 / 60):
-        self.cur_frame += .5
+        self.cur_frame += .3
         self.texture = self.animation[round(round(self.cur_frame) % len(self.animation))]
 
 

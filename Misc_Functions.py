@@ -1,8 +1,8 @@
 import arcade as arc
-from Globals import *
+import Globals
 from random import randrange
 from os import walk
-from math import sqrt
+from math import sqrt, sin
 
 
 # basically just the randrange function, but automatically puts the lower value first
@@ -47,4 +47,10 @@ def get_closest_wall(object, walls):
 
 
 def get_turn_multiplier(speed):
-    return speed / (PLAYER_MAX_SPEED / 1.5)
+    return speed / (Globals.PLAYER_MAX_SPEED / 1.5)
+
+
+def get_shade(r, c, color_range):
+    cell_shade = int((sin(r / Globals.CELL_COLOR_GRANULARITY) + sin(c / Globals.CELL_COLOR_GRANULARITY) + 2)
+                     / 4 * (color_range[1] - color_range[0])) + color_range[0]
+    return cell_shade

@@ -12,7 +12,7 @@ class WallParticle(arc.FadeParticle):
 class DrillEmitter(arc.Emitter):
     def __init__(self, center_xy, wall_color=(50, 50, 50)):
         super().__init__(center_xy=center_xy, emit_controller=arc.EmitBurst(1),
-                       particle_factory=lambda emitter: WallParticle(wall_color))
+                         particle_factory=lambda emitter: WallParticle(wall_color))
 
 
 def drill_wall_emit(center_xy, wall_color=(50, 50, 50)):
