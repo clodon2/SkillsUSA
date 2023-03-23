@@ -3,7 +3,7 @@ import arcade as arc
 
 import Globals
 import Levels as lvl
-from World_Objects import Drill
+from World_Objects import Drill, DrillGui
 from Misc_Functions import IsRectCollidingWithPoint, get_turn_multiplier
 from Menus import start_menu, controls_menu, win_menu, loss_menu
 from Particles import drill_wall_emit
@@ -52,6 +52,10 @@ class MainMenu(arc.View):
                     controls_view = ControlsView()
                     self.window.show_view(controls_view)
 
+    def on_key_press(self, key, modifiers):
+        if arc.key.ESCAPE:
+            arc.exit()
+
 
 class ControlsView(arc.View):
     def __init__(self):
@@ -92,6 +96,10 @@ class ControlsView(arc.View):
                     menu_view = MainMenu()
                     self.window.show_view(menu_view)
 
+    def on_key_press(self, key, modifiers):
+        if arc.key.ESCAPE:
+            arc.exit()
+
 
 class EndMenus(arc.View):
     def __init__(self):
@@ -131,6 +139,10 @@ class EndMenus(arc.View):
                 if button.id == "back":
                     menu_view = MainMenu()
                     self.window.show_view(menu_view)
+
+    def on_key_press(self, key, modifiers):
+        if arc.key.ESCAPE:
+            arc.exit()
 
 
 class WinView(EndMenus):
@@ -198,6 +210,7 @@ class GameView(arc.View):
         self.seconds_timer = 0
         self.start_countdown = None
         self.start_countdown_num = 0
+        self.drill_gui = None
         self.emitters = []
         self.physics_engine = None
         self.bot_physics = []
@@ -266,6 +279,7 @@ class GameView(arc.View):
             self.scene.add_sprite("powerups", sprite=new_drill)
             self.powerup_pressed = False
             self.player.power_up = None
+            self.drill_gui.toggle()
 
     def on_key_press(self, key, modifiers):
         if key == arc.key.W:
@@ -287,23 +301,10 @@ class GameView(arc.View):
             self.right_pressed = True
 
         if key == arc.key.ESCAPE:
-            quit()
+            arc.exit()
 
         if key == arc.key.SPACE:
             self.powerup_pressed = True
-
-
-        # run cellular automata for 1 step
-        if key == arc.key.N:
-            lvl.update_level(self)
-
-        # generate new track
-        if key == arc.key.R:
-            lvl.new_track(self)
-
-        # clears current grid
-        if key == arc.key.C:
-            self.scene["cells"].clear()
 
     def on_key_release(self, key, modifiers):
         if key == arc.key.W:
@@ -373,6 +374,11 @@ class GameView(arc.View):
         self.start_countdown.x = (Globals.SCREEN_WIDTH / 2) - (self.start_countdown.content_width / 2)
         self.start_countdown.y = (Globals.SCREEN_HEIGHT / 2) - (self.start_countdown.content_height / 2)
 
+        # drill gui thingy
+        drill_gui_x = 50 * Globals.SCREEN_PERCENTS[0]
+        drill_gui_y = Globals.SCREEN_HEIGHT / 1.1
+        self.drill_gui = DrillGui(drill_gui_x, drill_gui_y)
+
     def on_resize(self, width: int, height: int):
         Globals.resize_screen(width, height)
         self.__init__()
@@ -407,6 +413,9 @@ class GameView(arc.View):
         self.gui_camera.use()
         if self.start_countdown:
             self.start_countdown.draw()
+
+        self.drill_gui.draw()
+        self.drill_gui.activation_text.draw()
 
     def center_camera_to_player(self):
         # Scroll left
@@ -490,7 +499,9 @@ class GameView(arc.View):
         # player-power up box interaction
         collisions = arc.check_for_collision_with_list(self.player, self.scene["power_boxes"])
         for box in collisions:
-            self.player.power_up = "drill"
+            if not self.player.power_up == "drill":
+                self.drill_gui.toggle()
+                self.player.power_up = "drill"
             box.kill()
 
         # bot-exit interaction

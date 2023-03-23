@@ -145,19 +145,24 @@ def controls_menu(view):
                       textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
 
     text_objs = [
-                 BasicText("Forward - W/Up Arrow/Right Trigger", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.4),
+                 BasicText("Forward - W/Up Arrow/Right Trigger",
+                           location=(Globals.MID_SCREEN, 500 * Globals.SCREEN_PERCENTS[1]),
                            textsize=30, font="ARCADECLASSIC", text_color=arc.color.WHITE),
 
-                 BasicText("Backward - S/Down Arrow/Left Trigger", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.55),
+                 BasicText("Backward - S/Down Arrow/Left Trigger",
+                           location=(Globals.MID_SCREEN, 450 * Globals.SCREEN_PERCENTS[1]),
                            textsize=30, font="ARCADECLASSIC", text_color=arc.color.WHITE),
 
-                 BasicText("Right - D/Right Arrow/Left Joystick", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.7),
+                 BasicText("Right - D/Right Arrow/Left Joystick",
+                           location=(Globals.MID_SCREEN, 400 * Globals.SCREEN_PERCENTS[1]),
                            textsize=30, font="ARCADECLASSIC", text_color=arc.color.WHITE),
 
-                 BasicText("Left - A/Right Arrow/Left Joystick", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.85),
+                 BasicText("Left - A/Right Arrow/Left Joystick",
+                           location=(Globals.MID_SCREEN, 350 * Globals.SCREEN_PERCENTS[1]),
                            textsize=30, font="ARCADECLASSIC", text_color=arc.color.WHITE),
 
-                 BasicText("Powerup - Space/X (left) button", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 2.05),
+                 BasicText("Powerup - Space/X (left) button",
+                           location=(Globals.MID_SCREEN, 300 * Globals.SCREEN_PERCENTS[1]),
                            textsize=30, font="ARCADECLASSIC", text_color=arc.color.WHITE),
     ]
 

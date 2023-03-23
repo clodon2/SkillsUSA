@@ -4,6 +4,26 @@ from Misc_Functions import load_animation_one
 from math import cos, radians, sin
 
 
+class DrillGui(arc.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.texture = arc.load_texture("Assets/Powerups/drill/drill1.png")
+        print(self.color)
+        self.color = arc.color.BLACK
+        self.alpha = 99
+        self.scale = .3
+        self.center_x = x
+        self.center_y = y
+
+        self.activation_text = arc.Text("Space/X", self.left, self.bottom, font_name="ARCADECLASSIC")
+
+    def toggle(self):
+        if self.color == arc.color.BLACK:
+            self.color = (255, 255, 255)
+        else:
+            self.color = arc.color.BLACK
+
+
 class PowerUp(arc.Sprite):
     def __init__(self):
         super().__init__()
