@@ -1,5 +1,5 @@
 import arcade as arc
-from Globals import *
+import Globals
 from Misc_Functions import load_animation_one
 from math import cos, radians, sin
 
@@ -30,12 +30,12 @@ class Drill(PowerUp):
         self.scale = .5
         self.angle = launch_angle + 90
 
-        self.change_x = DRILL_SPEED
-        self.change_y = DRILL_SPEED
+        self.change_x = Globals.DRILL_SPEED
+        self.change_y = Globals.DRILL_SPEED
 
         self.timer = 0
 
-        self.k_bar_marg = CELL_WIDTH * 3
+        self.k_bar_marg = Globals.CELL_WIDTH * 3
 
     def update(self):
         self.timer += 1
@@ -43,8 +43,8 @@ class Drill(PowerUp):
         self.center_y += self.change_y * cos(radians(self.angle - 90))\
 
         # delete drill if too close to outside of track
-        if not (self.k_bar_marg <= self.center_x <= (CELL_GRID_WIDTH - self.k_bar_marg)) or \
-                not (self.k_bar_marg <= self.center_y <= (CELL_GRID_HEIGHT - self.k_bar_marg)):
+        if not (self.k_bar_marg <= self.center_x <= (Globals.CELL_GRID_WIDTH - self.k_bar_marg)) or \
+                not (self.k_bar_marg <= self.center_y <= (Globals.CELL_GRID_HEIGHT - self.k_bar_marg)):
             self.kill()
 
         # kill drill after a bit of time, could have it die in a dif way

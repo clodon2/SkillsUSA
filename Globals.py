@@ -4,7 +4,7 @@ from random import randrange
 
 arc.enable_timings()
 
-SCREEN_WIDTH = 1080
+SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 MID_SCREEN = SCREEN_WIDTH / 2
 
@@ -23,7 +23,7 @@ DEFAULT_FONT_SIZE = 25
 
 # Player stuff
 # forwards driving speeds
-PLAYER_MAX_SPEED = 8
+PLAYER_MAX_SPEED = 10
 PLAYER_ACCELERATION_SPEED = .4
 
 # backwards driving speeds
@@ -54,7 +54,7 @@ CAMERA_SPEED = .3
 DRILL_SPEED = 12
 
 # Cell Generation
-GRID_WIDTH = 500
+GRID_WIDTH = 600
 GRID_HEIGHT = 75
 GRID_BL_POS = (5, 5)
 
@@ -87,7 +87,8 @@ MIN_NEIGHBORS_BIRTH = 6
 
 def resize_screen(width: int, height: int):
     global SCREEN_WIDTH, SCREEN_HEIGHT, MID_SCREEN, SCREEN_PERCENTS, SCREEN_PERCENT, CELL_WIDTH, CELL_HEIGHT,\
-        CELL_GRID_HEIGHT, CELL_GRID_WIDTH, PLAYER_MAX_SPEED, PLAYER_BACK_MAX_SPEED, PLAYER_DRIFT_SPEED
+        CELL_GRID_HEIGHT, CELL_GRID_WIDTH, PLAYER_MAX_SPEED, PLAYER_BACK_MAX_SPEED, PLAYER_DRIFT_SPEED, BOT_MAX_SPEED, \
+        DRILL_SPEED
 
     SCREEN_WIDTH = width
     SCREEN_HEIGHT = height
@@ -103,17 +104,20 @@ def resize_screen(width: int, height: int):
     CELL_GRID_HEIGHT = CELL_HEIGHT * GRID_HEIGHT
     CELL_GRID_WIDTH = CELL_WIDTH * GRID_WIDTH
 
-    PLAYER_MAX_SPEED = 8 * SCREEN_PERCENT
+    PLAYER_MAX_SPEED = 10 * SCREEN_PERCENT
     PLAYER_BACK_MAX_SPEED = PLAYER_MAX_SPEED / 1.2
     PLAYER_DRIFT_SPEED = PLAYER_MAX_SPEED / 1.3
+
+    BOT_MAX_SPEED = 10.3 * SCREEN_PERCENT
+    DRILL_SPEED = 14 * SCREEN_PERCENT
 
 
 def randomize_wall_color():
     global R_CELL_COLOR_RANGE, G_CELL_COLOR_RANGE, B_CELL_COLOR_RANGE
 
-    r_min = randrange(0, 256)
-    R_CELL_COLOR_RANGE = (r_min, randrange(r_min, 256))
-    g_min = randrange(0, 256)
-    G_CELL_COLOR_RANGE = (g_min, randrange(g_min, 256))
-    b_min = randrange(0, 256)
-    B_CELL_COLOR_RANGE = (b_min, randrange(b_min, 256))
+    r_min = randrange(15, 80)
+    R_CELL_COLOR_RANGE = (r_min, randrange(r_min, 120))
+    g_min = randrange(15, 80)
+    G_CELL_COLOR_RANGE = (g_min, randrange(g_min, 120))
+    b_min = randrange(15, 80)
+    B_CELL_COLOR_RANGE = (b_min, randrange(b_min, 120))

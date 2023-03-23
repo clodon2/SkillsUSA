@@ -162,7 +162,7 @@ class GameView(arc.View):
         self.view_left = 0
         self.view_bottom = 0
         self.end_of_map = Globals.CELL_GRID_WIDTH
-        self.map_height = Globals.CELL_GRID_HEIGHT
+        self.map_height = Globals.CELL_GRID_HEIGHT - .5 * Globals.CELL_HEIGHT
 
         self.player = None
 
@@ -260,12 +260,12 @@ class GameView(arc.View):
             self.player.change_angle = 0
 
         if self.powerup_pressed and self.player.power_up == "drill":
-            self.powerup_pressed = False
-            self.player.power_up = None
             new_drill = Drill(launch_angle=self.player.angle)
             new_drill.center_x = self.player.center_x
             new_drill.center_y = self.player.center_y
             self.scene.add_sprite("powerups", sprite=new_drill)
+            self.powerup_pressed = False
+            self.player.power_up = None
 
     def on_key_press(self, key, modifiers):
         if key == arc.key.W:
@@ -288,7 +288,7 @@ class GameView(arc.View):
 
         if key == arc.key.ESCAPE:
             quit()
-        # DEV INPUTS
+
         if key == arc.key.SPACE:
             self.powerup_pressed = True
 
@@ -323,6 +323,9 @@ class GameView(arc.View):
             self.left_pressed = False
         if key == arc.key.RIGHT:
             self.right_pressed = False
+
+        if key == arc.key.SPACE:
+            self.powerup_pressed = False
 
         self.process_keychange()
 
@@ -394,11 +397,11 @@ class GameView(arc.View):
         for bot in self.scene["bots"]:
             arc.draw_line(bot.center_x, bot.center_y, bot.center_x + 100 * cos(bot.desired_angle), bot.center_y + 100 * sin(bot.desired_angle), (0, 0, 255), 10)
         '''
-        i = 0
-        for point in self.track_points:
-            i += 1
-            arc.draw_circle_filled(point[1] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1], point[0] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0], 10, (0, 255, 0))
-            arc.draw_text(str(i), point[1] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1], point[0] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0])
+        #i = 0
+        #for point in self.track_points:
+            #i += 1
+            #arc.draw_circle_filled(point[1] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1], point[0] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0], 10, (0, 255, 0))
+            #arc.draw_text(str(i), point[1] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1], point[0] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0])
 
         # gui cam stuff
         self.gui_camera.use()
@@ -520,7 +523,8 @@ class GameView(arc.View):
 
 def main():
     """Main function"""
-    window = arc.Window(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT, Globals.SCREEN_TITLE, fullscreen=False, resizable=True)
+    window = arc.Window(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT, Globals.SCREEN_TITLE,
+                        fullscreen=False, resizable=True, vsync=False)
     start_view = MainMenu()
     window.show_view(start_view)
     arc.run()

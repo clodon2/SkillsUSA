@@ -9,7 +9,6 @@ class WallParticle(arc.FadeParticle):
         global particle_color_num
         texture = arc.Texture(f"Wall_Particle{particle_color_num}", Image.new("RGBA", (32, 32), wall_color), hit_box_algorithm=None)
         particle_color_num += 1
-        print(particle_color_num)
         super().__init__(filename_or_texture=texture, change_xy=arc.rand_in_circle((0, 0), 1),
                          lifetime=.5)
 

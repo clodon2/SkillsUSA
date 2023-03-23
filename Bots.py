@@ -42,27 +42,25 @@ class BasicBot(arc.Sprite):
     def update(self):
 
         if self.last_track_point + 1 == len(self.track_points):
-            self.kill()
-            return
+            self.last_track_point -= 1
 
         next_track_point = self.track_points[self.last_track_point + 1]
-        next_track_point_pos = (next_track_point[1] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1], next_track_point[0] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0])
+        next_track_point_pos = (next_track_point[1] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[1],
+                                next_track_point[0] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[0])
 
-        if sqrt(abs(next_track_point_pos[0] - self.center_x)**2 + abs(next_track_point_pos[1] - self.center_y)**2) < 5 * Globals.CELL_HEIGHT:
+        if sqrt(abs(next_track_point_pos[0] - self.center_x)**2 + abs(next_track_point_pos[1] - self.center_y)**2)\
+                < 10 * Globals.CELL_HEIGHT:
             self.last_track_point += 1
 
         self.angle %= 360
 
         desired_angle = atan2(next_track_point_pos[1] - self.center_y, next_track_point_pos[0] - self.center_x)
 
-        self.desired_angle = desired_angle  # for debugging
-
-        print(degrees(desired_angle), self.angle - degrees(desired_angle - (pi/2)) - 360)
+        self.desired_angle = desired_angle
 
         # This works
         # self.angle -= (self.angle - degrees(desired_angle - (pi/2)))
 
-        # This doesn't-ish
         angle = self.angle - degrees(desired_angle - (pi/2)) - 360
 
         if angle < -Globals.BOT_MIN_TURN_ANGLE:
