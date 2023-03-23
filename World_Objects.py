@@ -15,7 +15,7 @@ class PowerUp(arc.Sprite):
 class PowerUpBox(arc.Sprite):
     def __init__(self):
         super().__init__()
-        self.texture = arc.load_texture("Assets/Powerups/power_up_box.png")
+        self.texture = arc.load_texture("Assets/Powerups/drill_power_up_box.png")
         self.scale = .3
 
 
