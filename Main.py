@@ -6,6 +6,7 @@ import Levels as lvl
 from World_Objects import Drill
 from Misc_Functions import IsRectCollidingWithPoint, get_turn_multiplier
 from Menus import start_menu, controls_menu
+from Particles import drill_wall_emit
 from math import radians, sin, cos
 
 
@@ -101,6 +102,7 @@ class GameView(arc.View):
         self.scene = None
 
         self.camera = None
+        self.gui_camera = None
         self.view_left = 0
         self.view_bottom = 0
         self.end_of_map = Globals.CELL_GRID_WIDTH
@@ -133,6 +135,13 @@ class GameView(arc.View):
 
         self.powerup_pressed = False
 
+        # game stuff
+        self.game_timer = 0
+        self.past_time = 0
+        self.seconds_timer = 0
+        self.start_countdown = None
+        self.start_countdown_num = 0
+        self.emitters = []
         self.physics_engine = None
         self.bot_physics = []
 
@@ -295,6 +304,15 @@ class GameView(arc.View):
     def load_level(self):
         lvl.new_track(self)
 
+        # reset timers
+        self.game_timer -= self.game_timer
+
+        # start countdown info
+        self.start_countdown = arc.Text(f"5", 0, 0, arc.color.WHITE, font_size=60,
+                                        font_name="ARCADECLASSIC")
+        self.start_countdown.x = (Globals.SCREEN_WIDTH / 2) - (self.start_countdown.content_width / 2)
+        self.start_countdown.y = (Globals.SCREEN_HEIGHT / 2) - (self.start_countdown.content_height / 2)
+
     def on_resize(self, width: int, height: int):
         Globals.resize_screen(width, height)
         self.__init__()
@@ -312,6 +330,9 @@ class GameView(arc.View):
         self.scene["powerups"].update_animation()
         self.scene.draw()
 
+        for emitter in self.emitters:
+            emitter.draw()
+
         '''
         for bot in self.scene["bots"]:
             arc.draw_line(bot.center_x, bot.center_y, bot.center_x + 100 * cos(bot.desired_angle), bot.center_y + 100 * sin(bot.desired_angle), (0, 0, 255), 10)
@@ -321,6 +342,11 @@ class GameView(arc.View):
             i += 1
             arc.draw_circle_filled(point[1] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1], point[0] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0], 10, (0, 255, 0))
             arc.draw_text(str(i), point[1] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1], point[0] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0])
+
+        # gui cam stuff
+        self.gui_camera.use()
+        if self.start_countdown:
+            self.start_countdown.draw()
 
     def center_camera_to_player(self):
         # Scroll left
@@ -374,16 +400,25 @@ class GameView(arc.View):
         '''''
 
     def on_update(self, delta_time: float):
+        self.game_timer += delta_time
+        self.seconds_timer = int(self.game_timer) % 60
 
-        if not self.player or not self.physics_engine:
-            return
-
-        # print(arcade.get_fps(30))
         self.process_keychange()
-        self.scene.update()
-        self.physics_engine.update()
-        for phy in self.bot_physics:
-            phy.update()
+        if self.seconds_timer <= 4.5:
+            self.start_countdown_num = -(self.seconds_timer - 5)
+            self.start_countdown.text = f"{self.start_countdown_num}"
+        elif 4.5 < self.seconds_timer == 5:
+            self.start_countdown_num = -(self.seconds_timer - 5)
+            self.start_countdown.text = f"GO"
+        else:
+            if self.start_countdown:
+                self.start_countdown = None
+            self.scene.update()
+            self.physics_engine.update()
+            for phy in self.bot_physics:
+                phy.update()
+        for emitter in self.emitters:
+            emitter.update()
         self.center_camera_to_player()
 
         # player-power up box interaction
@@ -401,6 +436,9 @@ class GameView(arc.View):
         for powerup in self.scene["powerups"]:
             if powerup.type == "drill":
                 for cell in powerup.collides_with_list(self.scene["cells"]):
+                    emitter_label, new_emitter = drill_wall_emit((cell.center_x, cell.center_y),
+                                                                 cell.texture.image.getcolors()[0][1])
+                    self.emitters.append(new_emitter)
                     cell.kill()
 
 

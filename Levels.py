@@ -43,8 +43,6 @@ def new_track(game):
     # player
     game.scene.add_sprite_list_after("player", "cells")
 
-    game.camera = arcade.Camera(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT)
-
     game.player = BasicPlayer()
     game.player.center_x = 2 * Globals.CELL_WIDTH
     game.player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT
@@ -63,13 +61,18 @@ def new_track(game):
 
     game.scene.add_sprite_list_after("powerups", "bots")
 
+    game.camera = arcade.Camera(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT)
+    game.gui_camera = arcade.Camera(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT)
+
 
 def load_track(game):
     for r in range(len(game.grid)):
         for c in range(len(game.grid[0])):
             if game.grid[r][c] == 1:
-                cell_shade = int((sin(r / Globals.CELL_COLOR_GRANULARITY) + sin(c / Globals.CELL_COLOR_GRANULARITY) + 2) / 4 * (Globals.CELL_COLOR_MAX - Globals.CELL_COLOR_MIN)) + Globals.CELL_COLOR_MIN
-                cell = arc.SpriteSolidColor(width=int(Globals.CELL_WIDTH), height=int(Globals.CELL_HEIGHT), color=(cell_shade, cell_shade, cell_shade))
+                cell_shade = int((sin(r / Globals.CELL_COLOR_GRANULARITY) + sin(c / Globals.CELL_COLOR_GRANULARITY) + 2)
+                                 / 4 * (Globals.CELL_COLOR_MAX - Globals.CELL_COLOR_MIN)) + Globals.CELL_COLOR_MIN
+                cell = arc.SpriteSolidColor(width=int(Globals.CELL_WIDTH), height=int(Globals.CELL_HEIGHT),
+                                            color=(cell_shade, cell_shade, cell_shade))
                 cell.center_x = c * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0]
                 cell.center_y = r * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1]
                 game.scene.add_sprite("cells", cell)
