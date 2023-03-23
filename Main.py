@@ -5,7 +5,7 @@ import Globals
 import Levels as lvl
 from World_Objects import Drill
 from Misc_Functions import IsRectCollidingWithPoint, get_turn_multiplier
-from Menus import start_menu, controls_menu
+from Menus import start_menu, controls_menu, win_menu, loss_menu
 from Particles import drill_wall_emit
 from math import radians, sin, cos
 
@@ -91,6 +91,62 @@ class ControlsView(arc.View):
                 if button.id == "back":
                     menu_view = MainMenu()
                     self.window.show_view(menu_view)
+
+
+class EndMenus(arc.View):
+    def __init__(self):
+        super().__init__()
+        self.width = Globals.SCREEN_WIDTH
+        self.height = Globals.SCREEN_HEIGHT
+
+        self.scene = None
+
+        self.camera = None
+        self.button_list = []
+        self.text_list = []
+
+    def on_show_view(self):
+        controls_menu(self)
+
+    def on_resize(self, width: int, height: int):
+        self.window.set_viewport(0, width, 0, height)
+        Globals.resize_screen(width, height)
+        self.__init__()
+        self.on_show_view()
+
+    def on_draw(self):
+        arc.draw_xywh_rectangle_filled(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT, color=arc.color.DARK_SLATE_GRAY)
+
+        for button in self.button_list:
+            button.update()
+        for text in self.text_list:
+            try:
+                text.update()
+            except:
+                text.draw()
+
+    def on_mouse_press(self, mouse_x: int, mouse_y: int, button: int, modifiers: int):
+        for button in self.button_list:
+            if IsRectCollidingWithPoint(button.get_rect(), (mouse_x, mouse_y)):
+                if button.id == "back":
+                    menu_view = MainMenu()
+                    self.window.show_view(menu_view)
+
+
+class WinView(EndMenus):
+    def __init__(self):
+        super().__init__()
+
+    def on_show_view(self):
+        win_menu(self)
+
+
+class LossView(EndMenus):
+    def __init__(self):
+        super().__init__()
+
+    def on_show_view(self):
+        loss_menu(self)
 
 
 class GameView(arc.View):

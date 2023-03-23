@@ -144,7 +144,7 @@ def controls_menu(view):
     title = BasicText("Controls", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.2),
                       textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
 
-    test_objs = [
+    text_objs = [
                  BasicText("Forward - W/Up Arrow/Right Trigger", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.4),
                            textsize=30, font="ARCADECLASSIC", text_color=arc.color.WHITE),
 
@@ -164,7 +164,41 @@ def controls_menu(view):
     # should probably make an easier way to do this
     view.button_list.append(startbutton)
     view.text_list.append(title)
-    view.text_list.extend(test_objs)
+    view.text_list.extend(text_objs)
 
     view.mouse_pos = 0, 0
     view.window.set_mouse_visible(True)
+
+
+def win_menu(view):
+    # Setup the Cameras
+    view.camera = arc.Camera(view.width, view.height)
+    # needed to load buttons and text
+    view.text_list = []
+    view.button_list = []
+
+    title = BasicText("You won the race!", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.2),
+                      textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
+
+    exit_button = BasicButton("Back To Main Menu", location=(50 * Globals.SCREEN_PERCENT, Globals.SCREEN_HEIGHT / 1.4),
+                              size=(300, 110), id='back', font="ARCADECLASSIC")
+
+    view.button_list.append(exit_button)
+    view.text_list.append(title)
+
+
+def loss_menu(view):
+    # Setup the Cameras
+    view.camera = arc.Camera(view.width, view.height)
+    # needed to load buttons and text
+    view.text_list = []
+    view.button_list = []
+
+    title = BasicText("You were eliminated from the race", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.2),
+                      textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
+
+    exit_button = BasicButton("Back To Main Menu", location=(50 * Globals.SCREEN_PERCENT, Globals.SCREEN_HEIGHT / 1.4),
+                              size=(300, 110), id='back', font="ARCADECLASSIC")
+
+    view.button_list.append(exit_button)
+    view.text_list.append(title)
