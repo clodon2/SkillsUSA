@@ -11,6 +11,9 @@ SCREEN_PERCENT = (SCREEN_PERCENTS[0] + SCREEN_PERCENTS[1]) / 2
 
 SCREEN_TITLE = "Cave Racer"
 
+# Game Values
+RACE_NUM = 6
+
 # Menu Stuff
 # for custom fonts
 arc.load_font("Assets/Menus/ARCADECLASSIC.TTF")

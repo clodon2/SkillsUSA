@@ -180,7 +180,7 @@ def win_menu(view):
     title = BasicText("You won the race!", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.2),
                       textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
 
-    exit_button = BasicButton("Back To Main Menu", location=(50 * Globals.SCREEN_PERCENT, Globals.SCREEN_HEIGHT / 1.4),
+    exit_button = BasicButton("Back To Main Menu", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 3),
                               size=(300, 110), id='back', font="ARCADECLASSIC")
 
     view.button_list.append(exit_button)
@@ -197,7 +197,7 @@ def loss_menu(view):
     title = BasicText("You were eliminated from the race", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.2),
                       textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
 
-    exit_button = BasicButton("Back To Main Menu", location=(50 * Globals.SCREEN_PERCENT, Globals.SCREEN_HEIGHT / 1.4),
+    exit_button = BasicButton("Back To Main Menu", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 3),
                               size=(300, 110), id='back', font="ARCADECLASSIC")
 
     view.button_list.append(exit_button)

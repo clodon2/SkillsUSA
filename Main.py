@@ -192,6 +192,7 @@ class GameView(arc.View):
         self.powerup_pressed = False
 
         # game stuff
+        self.race_num = 1
         self.game_timer = 0
         self.past_time = 0
         self.seconds_timer = 0
@@ -460,10 +461,16 @@ class GameView(arc.View):
         self.seconds_timer = int(self.game_timer) % 60
 
         self.process_keychange()
-        if self.seconds_timer <= 4.5:
-            self.start_countdown_num = -(self.seconds_timer - 5)
+        if self.seconds_timer < 4:
+            self.start_countdown.text = f"Race {self.race_num} of {Globals.RACE_NUM}"
+            self.start_countdown.x = Globals.MID_SCREEN - (self.start_countdown.content_width / 2)
+            self.start_countdown.y = (Globals.SCREEN_HEIGHT / 2) - (self.start_countdown.content_height / 2)
+        elif 4 <= self.seconds_timer <= 8.5:
+            self.start_countdown_num = -((self.seconds_timer - 4) - 5)
             self.start_countdown.text = f"{self.start_countdown_num}"
-        elif 4.5 < self.seconds_timer == 5:
+            self.start_countdown.x = Globals.MID_SCREEN - (self.start_countdown.content_width / 2)
+            self.start_countdown.y = (Globals.SCREEN_HEIGHT / 2) - (self.start_countdown.content_height / 2)
+        elif 8.5 < self.seconds_timer == 9:
             self.start_countdown_num = -(self.seconds_timer - 5)
             self.start_countdown.text = f"GO"
         else:
@@ -483,10 +490,22 @@ class GameView(arc.View):
             self.player.power_up = "drill"
             box.kill()
 
+        # bot-exit interaction
+        for bot in self.scene["bots"]:
+            bot_exit_collisions = arc.check_for_collision_with_list(bot, self.scene["exit"])
+            if bot_exit_collisions:
+                l_view = LossView()
+                self.window.show_view(l_view)
+
         # player-exit interaction
         exit_collisions = arc.check_for_collision_with_list(self.player, self.scene["exit"])
         if exit_collisions:
-            self.load_level()
+            self.race_num += 1
+            if self.race_num > Globals.RACE_NUM:
+                win_view = WinView()
+                self.window.show_view(win_view)
+            else:
+                self.load_level()
 
         # powerup interactions
         for powerup in self.scene["powerups"]:
