@@ -1,5 +1,7 @@
 import arcade as arc
 
+from random import randrange
+
 arc.enable_timings()
 
 SCREEN_WIDTH = 1080
@@ -104,3 +106,14 @@ def resize_screen(width: int, height: int):
     PLAYER_MAX_SPEED = 8 * SCREEN_PERCENT
     PLAYER_BACK_MAX_SPEED = PLAYER_MAX_SPEED / 1.2
     PLAYER_DRIFT_SPEED = PLAYER_MAX_SPEED / 1.3
+
+
+def randomize_wall_color():
+    global R_CELL_COLOR_RANGE, G_CELL_COLOR_RANGE, B_CELL_COLOR_RANGE
+
+    r_min = randrange(0, 256)
+    R_CELL_COLOR_RANGE = (r_min, randrange(r_min, 256))
+    g_min = randrange(0, 256)
+    G_CELL_COLOR_RANGE = (g_min, randrange(g_min, 256))
+    b_min = randrange(0, 256)
+    B_CELL_COLOR_RANGE = (b_min, randrange(b_min, 256))

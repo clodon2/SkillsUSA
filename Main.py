@@ -458,7 +458,7 @@ class GameView(arc.View):
 
     def on_update(self, delta_time: float):
         self.game_timer += delta_time
-        self.seconds_timer = int(self.game_timer) % 60
+        self.seconds_timer = int(self.game_timer)
 
         self.process_keychange()
         if self.seconds_timer < 4:
@@ -505,6 +505,7 @@ class GameView(arc.View):
                 win_view = WinView()
                 self.window.show_view(win_view)
             else:
+                Globals.randomize_wall_color()
                 self.load_level()
 
         # powerup interactions
