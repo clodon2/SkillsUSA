@@ -98,7 +98,8 @@ class BasicText:
         self.text_size = textsize * Globals.SCREEN_PERCENT
         text_y = location[1] - self.text_size/2
         self.text = arc.Text(text, location[0], text_y,
-                             text_color, self.text_size, font_name=font, multiline=True, width=(Globals.SCREEN_WIDTH - (Globals.SCREEN_WIDTH / 20)))
+                             text_color, self.text_size, font_name=font, multiline=True,
+                             width=(Globals.SCREEN_WIDTH - (Globals.SCREEN_WIDTH / 20)))
         self.text.x = location[0] - self.text.content_width/2
 
     def update(self):
@@ -182,7 +183,7 @@ def win_menu(view):
     view.text_list = []
     view.button_list = []
 
-    title = BasicText("You won the race!", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.2),
+    title = BasicText("Well done, Cave Master! \n + 5000 points", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.2),
                       textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
 
     exit_button = BasicButton("Back To Main Menu", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 3),
@@ -199,7 +200,7 @@ def loss_menu(view):
     view.text_list = []
     view.button_list = []
 
-    title = BasicText("You were eliminated from the race", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.2),
+    title = BasicText("You were eliminated from the race, -1000 points", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.2),
                       textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
 
     exit_button = BasicButton("Back To Main Menu", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 3),
