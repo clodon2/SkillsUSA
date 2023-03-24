@@ -24,7 +24,6 @@ class BasicPlayer(arc.Sprite):
             self.speed = -Globals.PLAYER_BACK_MAX_SPEED
 
     def update(self):
-
         if abs(self.speed) < 0.1:
             self.speed = 0
 
@@ -33,7 +32,8 @@ class BasicPlayer(arc.Sprite):
 
         # drifting around turns if above certain speed
         if self.speed > Globals.PLAYER_DRIFT_SPEED:
-            self.center_y += self.change_angle / (Globals.PLAYER_MAX_SPEED - self.speed / Globals.PLAYER_DRIFT_SPEED) * sin(radians(self.angle))
+            self.center_y += self.change_angle / (Globals.PLAYER_MAX_SPEED - self.speed / Globals.PLAYER_DRIFT_SPEED)\
+                             * sin(radians(self.angle)) * 5
 
         # Keep player in bounds
         if self.center_x < 0:
