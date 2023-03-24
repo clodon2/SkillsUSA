@@ -40,7 +40,6 @@ class BasicBot(arc.Sprite):
         self.change_y = self.max_speed
 
     def update(self):
-
         if self.last_track_point + 1 == len(self.track_points):
             self.last_track_point -= 1
 
@@ -56,17 +55,14 @@ class BasicBot(arc.Sprite):
 
         desired_angle = atan2(next_track_point_pos[1] - self.center_y, next_track_point_pos[0] - self.center_x)
 
-        self.desired_angle = desired_angle
-
-        # This works
-        # self.angle -= (self.angle - degrees(desired_angle - (pi/2)))
+        self.desired_angle = desired_angle  # for debugging
 
         angle = self.angle - degrees(desired_angle - (pi/2)) - 360
 
         if angle < -Globals.BOT_MIN_TURN_ANGLE:
-            self.angle += Globals.PLAYER_ROTATION_SPEED  # angle
+            self.angle += Globals.PLAYER_ROTATION_SPEED
         elif angle > Globals.BOT_MIN_TURN_ANGLE:
-            self.angle -= Globals.PLAYER_ROTATION_SPEED  # angle
+            self.angle -= Globals.PLAYER_ROTATION_SPEED
 
         self.accelerate()
 

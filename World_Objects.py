@@ -8,7 +8,6 @@ class DrillGui(arc.Sprite):
     def __init__(self, x, y):
         super().__init__()
         self.texture = arc.load_texture("Assets/Powerups/drill/drill1.png")
-        print(self.color)
         self.color = arc.color.BLACK
         self.alpha = 99
         self.scale = .3

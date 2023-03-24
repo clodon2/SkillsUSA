@@ -402,12 +402,13 @@ class GameView(arc.View):
         '''
         for bot in self.scene["bots"]:
             arc.draw_line(bot.center_x, bot.center_y, bot.center_x + 100 * cos(bot.desired_angle), bot.center_y + 100 * sin(bot.desired_angle), (0, 0, 255), 10)
+
+        i = 0
+        for point in self.track_points:
+            i += 1
+            arc.draw_circle_filled(point[1] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[1], point[0] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[0], 10, (0, 255, 0))
+            arc.draw_text(str(i), point[1] * Globals.CELL_WIDTH, point[0] * Globals.CELL_HEIGHT)
         '''
-        #i = 0
-        #for point in self.track_points:
-            #i += 1
-            #arc.draw_circle_filled(point[1] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1], point[0] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0], 10, (0, 255, 0))
-            #arc.draw_text(str(i), point[1] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[1], point[0] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[0])
 
         # gui cam stuff
         self.gui_camera.use()
@@ -473,18 +474,22 @@ class GameView(arc.View):
         self.seconds_timer = int(self.game_timer)
 
         self.process_keychange()
+        # pre-race info
         if self.seconds_timer < 4:
             self.start_countdown.text = f"Race {self.race_num} of {Globals.RACE_NUM}"
             self.start_countdown.x = Globals.MID_SCREEN - (self.start_countdown.content_width / 2)
             self.start_countdown.y = (Globals.SCREEN_HEIGHT / 2) - (self.start_countdown.content_height / 2)
+        # race countdown start
         elif 4 <= self.seconds_timer <= 8.5:
             self.start_countdown_num = -((self.seconds_timer - 4) - 5)
             self.start_countdown.text = f"{self.start_countdown_num}"
             self.start_countdown.x = Globals.MID_SCREEN - (self.start_countdown.content_width / 2)
             self.start_countdown.y = (Globals.SCREEN_HEIGHT / 2) - (self.start_countdown.content_height / 2)
+        # GO
         elif 8.5 < self.seconds_timer == 9:
             self.start_countdown_num = -(self.seconds_timer - 5)
             self.start_countdown.text = f"GO"
+        # Race started
         else:
             if self.start_countdown:
                 self.start_countdown = None
