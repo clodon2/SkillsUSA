@@ -254,9 +254,11 @@ class GameView(arc.View):
             self.move_right = False
 
         if self.move_up and not self.move_down:
-            self.player.accelerate()
+            force = (0, Globals.P_MOVE_FORCE)
+            self.physics_engine.apply_force(self.player, force)
         elif self.move_down and not self.move_up:
-            self.player.backwards_accelerate()
+            force = (0, -Globals.P_MOVE_FORCE)
+            self.physics_engine.apply_force(self.player, force)
 
         controller_rotation_mult = 1
 
