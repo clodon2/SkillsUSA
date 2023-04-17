@@ -494,9 +494,7 @@ class GameView(arc.View):
             if self.start_countdown:
                 self.start_countdown = None
             self.scene.update()
-            self.physics_engine.update()
-            for phy in self.bot_physics:
-                phy.update()
+            self.physics_engine.step()
         for emitter in self.emitters:
             emitter.update()
         self.center_camera_to_player()

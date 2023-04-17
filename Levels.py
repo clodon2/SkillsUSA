@@ -2,23 +2,28 @@ import arcade
 
 import Globals
 import arcade as arc
+from arcade.pymunk_physics_engine import PymunkPhysicsEngine
 from random import randrange
 from Automata import generate_random_grid, run_sim, generate_track
 from Bots import BasicBot
 from Player import BasicPlayer
 from World_Objects import PowerUpBox, EndEntrance
 from Misc_Functions import get_shade
-from math import sin, cos
 
 
 def new_track(game):
+    game.camera = arcade.Camera(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT)
+    game.gui_camera = arcade.Camera(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT)
     game.scene = arc.Scene()
+    game.physics_engine = arc.PymunkPhysicsEngine(damping=Globals.DAMPING)
 
     # load in track
     game.scene.add_sprite_list("cells", use_spatial_hash=True)
     game.grid, game.track_points = generate_track(Globals.GRID_WIDTH, Globals.GRID_HEIGHT)
 
     load_track(game)
+
+    game.physics_engine.add_sprite_list(game.scene["cells"], body_type=1)
 
     # spawn in powerup boxes
     game.scene.add_sprite_list_after("power_boxes", "cells", use_spatial_hash=True)
@@ -48,7 +53,9 @@ def new_track(game):
     game.player.center_x = 2 * Globals.CELL_WIDTH
     game.player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT + game.player.width
     game.scene.add_sprite("player", game.player)
-    game.physics_engine = arc.PhysicsEngineSimple(game.player, game.scene.get_sprite_list("cells"))
+    game.physics_engine.add_sprite(game.player, friction=Globals.P_FRICTION,
+                                   moment_of_inertia=PymunkPhysicsEngine.MOMENT_INF,
+                                   damping=0.01, collision_type="player", max_velocity=Globals.P_MAX_SPEED)
 
     game.scene.add_sprite_list_after("bots", "player")
 
@@ -57,13 +64,11 @@ def new_track(game):
     bot.center_x = 2 * Globals.CELL_WIDTH
     bot.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT - bot.width
     game.scene.add_sprite("bots", bot)
-    bot_physics = arc.PhysicsEngineSimple(bot, game.scene.get_sprite_list("cells"))
-    game.bot_physics.append(bot_physics)
+
+    game.physics_engine.add_sprite_list(game.scene["bots"], friction=Globals.B_FRICTION,
+                                        damping=.01, collision_type="player")
 
     game.scene.add_sprite_list_after("powerups", "bots")
-
-    game.camera = arcade.Camera(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT)
-    game.gui_camera = arcade.Camera(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT)
 
 
 def load_track(game):

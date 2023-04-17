@@ -1,6 +1,6 @@
 import arcade as arc
 import Globals
-from math import radians, sin, cos
+from math import radians, sin, cos, degrees
 
 
 class BasicPlayer(arc.Sprite):
@@ -27,14 +27,6 @@ class BasicPlayer(arc.Sprite):
         if abs(self.speed) < 0.1:
             self.speed = 0
 
-        self.center_x += -self.speed * sin(radians(self.angle))
-        self.center_y += self.speed * cos(radians(self.angle))
-
-        # drifting around turns if above certain speed
-        if self.speed > Globals.PLAYER_DRIFT_SPEED:
-            self.center_y += self.change_angle / (Globals.PLAYER_MAX_SPEED - self.speed / Globals.PLAYER_DRIFT_SPEED)\
-                             * sin(radians(self.angle)) * 5
-
         # Keep player in bounds
         if self.center_x < 0:
             self.center_x = 0
@@ -50,3 +42,9 @@ class BasicPlayer(arc.Sprite):
             self.speed -= Globals.PLAYER_DEACCELERATION_SPEED
         elif self.speed < 0:
             self.speed += Globals.PLAYER_DEACCELERATION_SPEED
+
+        self.angle += degrees(self.change_angle)
+        self.pymunk.body.angle += self.change_angle
+
+        # prevent player from going outside area
+        self.pymunk.body._set_position((self.center_x, self.center_y))

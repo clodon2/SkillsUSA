@@ -21,6 +21,15 @@ RACE_NUM = 6
 arc.load_font("Assets/Menus/ARCADECLASSIC.TTF")
 DEFAULT_FONT_SIZE = 25
 
+# Physics
+DAMPING = .5
+
+P_FRICTION = .8
+P_MAX_SPEED = 400
+
+B_FRICTION = .8
+B_MAX_SPEED = 400
+
 # Player stuff
 # forwards driving speeds
 PLAYER_MAX_SPEED = 10
