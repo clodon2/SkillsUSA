@@ -16,6 +16,7 @@ def new_track(game):
     game.gui_camera = arcade.Camera(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT)
     game.scene = arc.Scene()
     game.physics_engine = arc.PymunkPhysicsEngine(damping=Globals.DAMPING)
+    Globals.ENGINE = game.physics_engine
 
     # load in track
     game.scene.add_sprite_list("cells", use_spatial_hash=True)
@@ -23,7 +24,7 @@ def new_track(game):
 
     load_track(game)
 
-    game.physics_engine.add_sprite_list(game.scene["cells"], body_type=1)
+    game.physics_engine.add_sprite_list(game.scene["cells"], body_type=PymunkPhysicsEngine.STATIC, collision_type="wall")
 
     # spawn in powerup boxes
     game.scene.add_sprite_list_after("power_boxes", "cells", use_spatial_hash=True)
@@ -56,6 +57,7 @@ def new_track(game):
     game.physics_engine.add_sprite(game.player, friction=Globals.P_FRICTION,
                                    moment_of_inertia=PymunkPhysicsEngine.MOMENT_INF,
                                    damping=0.01, collision_type="player", max_velocity=Globals.P_MAX_SPEED)
+    game.player.pymunk_phys = game.physics_engine.get_physics_object(game.player)
 
     game.scene.add_sprite_list_after("bots", "player")
 
@@ -67,6 +69,7 @@ def new_track(game):
 
     game.physics_engine.add_sprite_list(game.scene["bots"], friction=Globals.B_FRICTION,
                                         damping=.01, collision_type="player")
+    bot.pymunk_phys = game.physics_engine.get_physics_object(bot)
 
     game.scene.add_sprite_list_after("powerups", "bots")
 

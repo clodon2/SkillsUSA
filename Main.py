@@ -253,24 +253,22 @@ class GameView(arc.View):
         else:
             self.move_right = False
 
-        if self.move_up and not self.move_down:
-            force = (0, Globals.P_MOVE_FORCE)
-            self.physics_engine.apply_force(self.player, force)
+        if self.seconds_timer < 10:
+            pass
+        elif self.move_up and not self.move_down:
+            self.player.accelerate()
         elif self.move_down and not self.move_up:
-            force = (0, -Globals.P_MOVE_FORCE)
-            self.physics_engine.apply_force(self.player, force)
+            self.player.backwards_accelerate()
 
         controller_rotation_mult = 1
 
         if self.thumbstick_rotation != 0:
             controller_rotation_mult = abs(self.thumbstick_rotation)
 
-        if self.player.speed == 0 and self.player.speed == 0:
-            self.player.change_angle = 0
-        elif self.move_right and not self.move_left:
-            self.player.change_angle = -Globals.PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player.speed) * controller_rotation_mult
+        if self.move_right and not self.move_left:
+            self.player.change_angle = radians(-Globals.PLAYER_ROTATION_SPEED) * controller_rotation_mult
         elif self.move_left and not self.move_right:
-            self.player.change_angle = Globals.PLAYER_ROTATION_SPEED * get_turn_multiplier(self.player.speed) * controller_rotation_mult
+            self.player.change_angle = radians(Globals.PLAYER_ROTATION_SPEED) * controller_rotation_mult
         elif not self.move_left and not self.move_right:
             self.player.change_angle = 0
 

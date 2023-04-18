@@ -29,15 +29,15 @@ class BasicBot(arc.Sprite):
         self.wall_closeness = Globals.CELL_HEIGHT * 1.5
 
         self.speed = 0
-
         self.max_speed = Globals.BOT_MAX_SPEED
 
+        self.pymunk_phys = None
+
     def accelerate(self):
-        '''
-        if self.change_y < self.max_speed:
-            self.change_y += 2
-        '''
-        self.change_y = self.max_speed
+        Globals.ENGINE.apply_force(self, (0, Globals.B_MOVE_FORCE))
+
+    def backwards_accelerate(self):
+        Globals.ENGINE.apply_force(self, (0, -Globals.B_MOVE_FORCE))
 
     def update(self):
         if self.last_track_point + 1 == len(self.track_points):
@@ -59,15 +59,17 @@ class BasicBot(arc.Sprite):
 
         angle = self.angle - degrees(desired_angle - (pi/2)) - 360
 
+        print(angle, Globals.BOT_MIN_TURN_ANGLE, desired_angle)
         if angle < -Globals.BOT_MIN_TURN_ANGLE:
-            self.angle += Globals.PLAYER_ROTATION_SPEED
+            print("t")
+            self.change_angle = Globals.BOT_MIN_TURN_ANGLE
         elif angle > Globals.BOT_MIN_TURN_ANGLE:
-            self.angle -= Globals.PLAYER_ROTATION_SPEED
+            print("t")
+            self.change_angle = -Globals.BOT_ROTATION_SPEED
+        else:
+            self.change_angle = 0
 
         self.accelerate()
-
-        self.center_x += -self.change_y * sin(radians(self.angle))
-        self.center_y += self.change_y * cos(radians(self.angle))
 
         # Keep in bounds
         if self.center_x < 0:
@@ -82,3 +84,10 @@ class BasicBot(arc.Sprite):
 
         self.change_x = 0
         self.change_y = 0
+
+        if self.pymunk_phys:
+            self.angle += self.change_angle
+            self.pymunk_phys.body.angle += radians(self.change_angle)
+
+            # prevent player from going outside area
+            self.pymunk_phys.body._set_position((self.center_x, self.center_y))
