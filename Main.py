@@ -179,6 +179,7 @@ class GameView(arc.View):
         self.player = None
 
         # input stuff
+        self.controllers = arc.get_joysticks()
         self.controller = None
 
         self.right_trigger_pressed = False
@@ -353,12 +354,16 @@ class GameView(arc.View):
     def on_show_view(self):
         arc.set_viewport(0, self.window.width, 0, self.window.height)
 
-        controllers = arcade.get_game_controllers()
+        self.controllers = arcade.get_game_controllers()
 
-        if controllers:
-            self.controller = controllers[0]
-            self.controller.open()
-            self.controller.push_handlers(self)
+        if self.controllers:
+            if len(self.controllers) > 4:
+                self.controllers = self.controllers[:3]
+
+            self.controller = self.controllers[0]
+            for controller in self.controllers:
+                controller.open()
+                controller.push_handlers(self)
 
         self.load_level()
 
