@@ -1,5 +1,6 @@
 import arcade as arc
 import Globals
+from Misc_Functions import pos_scale
 
 
 # basic button, meant for demos
@@ -9,6 +10,7 @@ class BasicButton:
                  tilt=0, id='none', font="Kenney Future Font"):
         self.id = id
         self.text = text
+        self.location = location
 
         size = (size[0] * Globals.SCREEN_PERCENTS[0], size[1] * Globals.SCREEN_PERCENTS[1])
 
@@ -91,6 +93,12 @@ class TexturedButton:
         return self.rect
 
 
+class Icon(arc.Sprite):
+    def __init__(self, texture_path):
+        super().__init__()
+        self.texture = texture_path
+
+
 class BasicText:
     def __init__(self, text, location,
                  textsize=Globals.DEFAULT_FONT_SIZE,
@@ -114,7 +122,7 @@ def start_menu(view):
     view.button_list = []
 
     # example stuff
-    startbutton = BasicButton("START", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 2),
+    startbutton = BasicButton("PLAY", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 2),
                                  size=(300, 110), id='start', font="ARCADECLASSIC")
     controlsbutton = BasicButton("CONTROLS", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 4.5),
                                     size=(300, 110), id='controls', font="ARCADECLASSIC")
@@ -125,6 +133,49 @@ def start_menu(view):
     # should probably make an easier way to do this
     view.button_list.append(startbutton)
     view.button_list.append(controlsbutton)
+    view.text_list.append(title)
+
+    view.mouse_pos = 0, 0
+    view.window.set_mouse_visible(True)
+
+
+def play_selection(view):
+    # Setup the Cameras
+    view.camera = arc.Camera(view.width, view.height)
+    # needed to load buttons and text
+    view.text_list = []
+    view.button_list = []
+
+    view.controller_icon = arc.load_texture("Assets/Menus/controller_icon.png")
+    view.keyboard_icon = arc.load_texture("Assets/Menus/keyboard_icon.png")
+
+    buttons = [
+        BasicButton("PLAYER ONE", location=(Globals.MID_SCREEN, pos_scale(500, "y")),
+                    size=(300, 110), id='1', font="ARCADECLASSIC"),
+        BasicButton("PLAYER TWO", location=(Globals.MID_SCREEN, pos_scale(360, "y")),
+                    size=(300, 110), id='2', font="ARCADECLASSIC"),
+        BasicButton("PLAYER THREE", location=(Globals.MID_SCREEN, pos_scale(220, "y")),
+                    size=(300, 110), id='3', font="ARCADECLASSIC"),
+        BasicButton("PLAYER FOUR", location=(Globals.MID_SCREEN, pos_scale(80, "y")),
+                    size=(300, 110), id='4', font="ARCADECLASSIC")
+    ]
+
+    icon_buttons = [
+        BasicButton("", location=(Globals.MID_SCREEN + pos_scale(250, "x"), pos_scale(500, "y")),
+                    size=(110, 110), id='i1', font="ARCADECLASSIC"),
+        BasicButton("", location=(Globals.MID_SCREEN + pos_scale(250, "x"), pos_scale(360, "y")),
+                    size=(110, 110), id='i2', font="ARCADECLASSIC"),
+        BasicButton("", location=(Globals.MID_SCREEN + pos_scale(250, "x"), pos_scale(220, "y")),
+                    size=(110, 110), id='i3', font="ARCADECLASSIC"),
+        BasicButton("", location=(Globals.MID_SCREEN + pos_scale(250, "x"), pos_scale(80, "y")),
+                    size=(110, 110), id='i4', font="ARCADECLASSIC")
+    ]
+
+    title = BasicText("Number of Players", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.1),
+                      textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
+
+    view.button_list.extend(buttons)
+    view.button_list.extend(icon_buttons)
     view.text_list.append(title)
 
     view.mouse_pos = 0, 0

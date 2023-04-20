@@ -47,7 +47,7 @@ def new_track(game):
 
     game.scene.add_sprite("exit", end_level)
 
-    # player
+    # players
     game.scene.add_sprite_list_after("player", "cells")
 
     game.player = BasicPlayer()

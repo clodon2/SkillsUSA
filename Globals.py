@@ -20,6 +20,7 @@ RACE_NUM = 6
 # for custom fonts
 arc.load_font("Assets/Menus/ARCADECLASSIC.TTF")
 DEFAULT_FONT_SIZE = 25
+TEXTURE_CACHE = 100
 
 # Physics
 ENGINE = None

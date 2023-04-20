@@ -3,6 +3,7 @@ import Globals
 from random import randrange
 from os import walk
 from math import sqrt, sin
+from PIL import Image
 
 
 # basically just the randrange function, but automatically puts the lower value first
@@ -54,3 +55,20 @@ def get_shade(r, c, color_range):
     cell_shade = int((sin(r / Globals.CELL_COLOR_GRANULARITY) + sin(c / Globals.CELL_COLOR_GRANULARITY) + 2)
                      / 4 * (color_range[1] - color_range[0])) + color_range[0]
     return cell_shade
+
+
+def pos_scale(position, axis="other"):
+    if axis.lower() == "x":
+        new_pos = position * Globals.SCREEN_PERCENTS[0]
+    elif axis.lower() == "y":
+        new_pos = position * Globals.SCREEN_PERCENTS[1]
+    else:
+        new_pos = position * Globals.SCREEN_PERCENT
+
+    return new_pos
+
+
+def load_new_cached_texture(path):
+    texture = arc.Texture(f"{Globals.TEXTURE_CACHE}awawieguh", Image.open(path).convert("RGBA"))
+    Globals.TEXTURE_CACHE += 1
+    return texture

@@ -4,10 +4,11 @@ import arcade as arc
 import Globals
 import Levels as lvl
 from World_Objects import Drill, DrillGui
-from Misc_Functions import IsRectCollidingWithPoint, get_turn_multiplier
-from Menus import start_menu, controls_menu, win_menu, loss_menu
+from Misc_Functions import IsRectCollidingWithPoint, get_turn_multiplier, pos_scale, load_new_cached_texture
+from Menus import start_menu, controls_menu, win_menu, loss_menu, play_selection, Icon
 from Particles import drill_wall_emit
 from math import radians, sin, cos
+from copy import deepcopy
 
 
 class MainMenu(arc.View):
@@ -46,11 +47,80 @@ class MainMenu(arc.View):
         for button in self.button_list:
             if IsRectCollidingWithPoint(button.get_rect(), (mouse_x, mouse_y)):
                 if button.id == "start":
-                    game_view = GameView()
-                    self.window.show_view(game_view)
+                    select_view = PlayerSelect()
+                    self.window.show_view(select_view)
                 if button.id == "controls":
                     controls_view = ControlsView()
                     self.window.show_view(controls_view)
+
+    def on_key_press(self, key, modifiers):
+        if key == arc.key.ESCAPE:
+            arc.exit()
+
+
+class PlayerSelect(arc.View):
+    def __init__(self):
+        super().__init__()
+        self.width = Globals.SCREEN_WIDTH
+        self.height = Globals.SCREEN_HEIGHT
+
+        self.scene = None
+
+        self.camera = None
+        self.button_list = []
+        self.text_list = []
+
+        self.input_icons = [
+            (load_new_cached_texture("Assets/Menus/keyboard_icon.png"), load_new_cached_texture("Assets/Menus/controller_icon.png")),
+            (load_new_cached_texture("Assets/Menus/keyboard_icon.png"), load_new_cached_texture("Assets/Menus/controller_icon.png")),
+            (load_new_cached_texture("Assets/Menus/keyboard_icon.png"), load_new_cached_texture("Assets/Menus/controller_icon.png")),
+            (load_new_cached_texture("Assets/Menus/keyboard_icon.png"), load_new_cached_texture("Assets/Menus/controller_icon.png")),
+        ]
+
+        self.controllers = arc.get_joysticks()
+        # 0 = None, 1 = keyboard, 2 = controller
+        self.input_types = [1, 0, 0, 0]
+
+        self.texture_cache_num = 0
+
+    def on_show_view(self):
+        play_selection(self)
+
+    def on_resize(self, width: int, height: int):
+        self.window.set_viewport(0, width, 0, height)
+        Globals.resize_screen(width, height)
+        self.__init__()
+        self.on_show_view()
+
+    def on_draw(self):
+        arc.draw_xywh_rectangle_filled(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT, color=arc.color.DARK_SLATE_GRAY)
+
+        for button in self.button_list:
+            button.update()
+        for text in self.text_list:
+            try:
+                text.update()
+            except:
+                text.draw()
+
+        for icon, icon_texture in zip(self.input_types, self.input_icons):
+            icon_pos = self.button_list[self.input_types.index(icon)].location
+            icon_pos = (icon_pos[0] + pos_scale(271), icon_pos[1])
+            if icon == 1:
+                print(icon_texture[0].name)
+                icon_texture[0].draw_scaled(icon_pos[0], icon_pos[1], 1/2)
+            elif icon == 2:
+                icon_texture[1].draw_scaled(icon_pos[0], icon_pos[1], 1/2)
+
+    def on_mouse_press(self, mouse_x: int, mouse_y: int, button: int, modifiers: int):
+        for button in self.button_list:
+            if IsRectCollidingWithPoint(button.get_rect(), (mouse_x, mouse_y)):
+                if button.id == "1":
+                    game_view = GameView()
+                    self.window.show_view(game_view)
+                if button.id[0] == "i":
+                    print(self.input_types[int(button.id[1]) - 1])
+                    self.input_types[int(button.id[1]) - 1] = (self.input_types[int(button.id[1]) - 1] + 1) % 3
 
     def on_key_press(self, key, modifiers):
         if key == arc.key.ESCAPE:
