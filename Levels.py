@@ -11,7 +11,7 @@ from World_Objects import PowerUpBox, EndEntrance
 from Misc_Functions import get_shade
 
 
-def new_track(game):
+def new_track(game, player_controls=None):
     game.camera = arcade.Camera(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT)
     game.gui_camera = arcade.Camera(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT)
     game.scene = arc.Scene()
@@ -50,16 +50,21 @@ def new_track(game):
     # players
     game.scene.add_sprite_list_after("player", "cells")
 
-    game.player = BasicPlayer()
-    game.player.center_x = 2 * Globals.CELL_WIDTH
-    game.player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT + game.player.width
-    game.scene.add_sprite("player", game.player)
-    game.physics_engine.add_sprite(game.player, friction=Globals.P_FRICTION,
-                                   moment_of_inertia=PymunkPhysicsEngine.MOMENT_INF,
-                                   damping=0.01, collision_type="player", max_velocity=Globals.P_MAX_SPEED)
-    game.player.pymunk_phys = game.physics_engine.get_physics_object(game.player)
+    # handle player spawning and such
+    if not player_controls:
+        game.player = BasicPlayer()
+        game.player.center_x = 2 * Globals.CELL_WIDTH
+        game.player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT + game.player.width
+        game.scene.add_sprite("player", game.player)
+        game.physics_engine.add_sprite(game.player, friction=Globals.P_FRICTION,
+                                       moment_of_inertia=PymunkPhysicsEngine.MOMENT_INF,
+                                       damping=0.01, collision_type="player", max_velocity=Globals.P_MAX_SPEED)
+        game.player.pymunk_phys = game.physics_engine.get_physics_object(game.player)
 
-    game.scene.add_sprite_list_after("bots", "player")
+        game.scene.add_sprite_list_after("bots", "player")
+    # proper loading will go here
+    else:
+        pass
 
     # bots
     bot = BasicBot(walls=game.scene["cells"], track_points=game.track_points)

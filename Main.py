@@ -8,7 +8,7 @@ from Misc_Functions import IsRectCollidingWithPoint, get_turn_multiplier, pos_sc
 from Menus import start_menu, controls_menu, win_menu, loss_menu, play_selection, Icon
 from Particles import drill_wall_emit
 from math import radians, sin, cos
-from PIL import Image
+from copy import deepcopy
 
 
 class MainMenu(arc.View):
@@ -249,10 +249,54 @@ class GameView(arc.View):
         self.map_height = Globals.CELL_GRID_HEIGHT - .5 * Globals.CELL_HEIGHT
 
         self.player = None
+        self.players = []
 
         # input stuff
         self.inputs = inputs
-        self.controllers = arc.get_joysticks()
+        self.controllers = arc.get_game_controllers()
+
+        usable_controllers = ["keyboard"]
+        usable_controllers.extend(arc.get_game_controllers())
+
+        self.player_controls = []
+        print(self.inputs, arc.get_game_controllers())
+        for i in self.inputs:
+            # count controllers
+            controller_count = 0
+            for cont in usable_controllers:
+                print(type(cont), "cont type")
+                if type(cont) == object:
+                    controller_count += 1
+
+            keyboard_count = usable_controllers.count("keyboard")
+
+            # adds players in as long as there are controllers left to use
+            if (len(usable_controllers)) > 0:
+                print(i)
+                if i == 0:
+                    self.player_controls.append("None")
+                # use keyboard
+                if i == 1 and keyboard_count > 0:
+                    self.player_controls.append("keyboard")
+                    usable_controllers.pop(usable_controllers.index("keyboard"))
+                    # use controller
+                if i == 2 and controller_count > 0:
+                    # if there is a keyboard left in the list
+                    if keyboard_count > 0:
+                        print("kb run")
+                        u_c_copy = deepcopy(usable_controllers)
+                        u_c_copy.pop(u_c_copy.index("keyboard"))
+                        selected_controller = u_c_copy[0]
+                        self.player_controls.append(selected_controller)
+                        usable_controllers.pop(usable_controllers.index(selected_controller))
+                    else:
+                        print("self-run")
+                        self.player_controls.append(usable_controllers[0])
+                        usable_controllers.pop(0)
+                else:
+                    self.player_controls.append("Load Failure")
+
+        print(self.player_controls)
         self.controller = None
 
         self.right_trigger_pressed = False
