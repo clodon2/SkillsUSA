@@ -7,7 +7,7 @@ from Misc_Functions import pos_scale
 class BasicButton:
     def __init__(self, text, location, size=(400, 100),
                  color=arc.csscolor.BLACK, textcolor=arc.csscolor.WHITE,
-                 tilt=0, id='none', font="Kenney Future Font"):
+                 tilt=0, id='none', font="Kenney Future Font", font_scale=1):
         self.id = id
         self.text = text
         self.location = location
@@ -19,7 +19,7 @@ class BasicButton:
         b_scales = (size[0] / base_b_size[0], size[1] / base_b_size[1])
         b_scale = (b_scales[0] + b_scales[1]) / 2
 
-        self.text_size = Globals.DEFAULT_FONT_SIZE * b_scale
+        self.text_size = Globals.DEFAULT_FONT_SIZE * b_scale * font_scale
 
         base = arc.create_rectangle_filled(location[0], location[1], size[0], size[1], color, tilt)
         self.basepoints = arc.get_rectangle_points(location[0], location[1], size[0], size[1], tilt)
@@ -149,29 +149,35 @@ def play_selection(view):
     view.controller_icon = arc.load_texture("Assets/Menus/controller_icon.png")
     view.keyboard_icon = arc.load_texture("Assets/Menus/keyboard_icon.png")
 
+    x_default = Globals.MID_SCREEN - pos_scale(300, axis="x")
+    start_b_x = Globals.MID_SCREEN + pos_scale(300, axis="x")
+    start_b_y = Globals.SCREEN_HEIGHT / 2
+
     buttons = [
-        BasicButton("PLAYER ONE", location=(Globals.MID_SCREEN, pos_scale(500, "y")),
+        BasicButton("PLAYER ONE", location=(x_default, pos_scale(500, "y")),
                     size=(300, 110), id='1', font="ARCADECLASSIC"),
-        BasicButton("PLAYER TWO", location=(Globals.MID_SCREEN, pos_scale(360, "y")),
+        BasicButton("PLAYER TWO", location=(x_default, pos_scale(360, "y")),
                     size=(300, 110), id='2', font="ARCADECLASSIC"),
-        BasicButton("PLAYER THREE", location=(Globals.MID_SCREEN, pos_scale(220, "y")),
+        BasicButton("PLAYER THREE", location=(x_default, pos_scale(220, "y")),
                     size=(300, 110), id='3', font="ARCADECLASSIC"),
-        BasicButton("PLAYER FOUR", location=(Globals.MID_SCREEN, pos_scale(80, "y")),
-                    size=(300, 110), id='4', font="ARCADECLASSIC")
+        BasicButton("PLAYER FOUR", location=(x_default, pos_scale(80, "y")),
+                    size=(300, 110), id='4', font="ARCADECLASSIC"),
+        BasicButton("START", location=(start_b_x, start_b_y), size=(400, 200),
+                    id="START", font="ARCADECLASSIC", font_scale=2)
     ]
 
     icon_buttons = [
-        BasicButton("", location=(Globals.MID_SCREEN + pos_scale(250, "x"), pos_scale(500, "y")),
+        BasicButton("", location=(x_default + pos_scale(250, "x"), pos_scale(500, "y")),
                     size=(110, 110), id='i1', font="ARCADECLASSIC"),
-        BasicButton("", location=(Globals.MID_SCREEN + pos_scale(250, "x"), pos_scale(360, "y")),
+        BasicButton("", location=(x_default + pos_scale(250, "x"), pos_scale(360, "y")),
                     size=(110, 110), id='i2', font="ARCADECLASSIC"),
-        BasicButton("", location=(Globals.MID_SCREEN + pos_scale(250, "x"), pos_scale(220, "y")),
+        BasicButton("", location=(x_default + pos_scale(250, "x"), pos_scale(220, "y")),
                     size=(110, 110), id='i3', font="ARCADECLASSIC"),
-        BasicButton("", location=(Globals.MID_SCREEN + pos_scale(250, "x"), pos_scale(80, "y")),
+        BasicButton("", location=(x_default + pos_scale(250, "x"), pos_scale(80, "y")),
                     size=(110, 110), id='i4', font="ARCADECLASSIC")
     ]
 
-    title = BasicText("Number of Players", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.1),
+    title = BasicText("Player Selection", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.1),
                       textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
 
     view.button_list.extend(buttons)

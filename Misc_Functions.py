@@ -67,8 +67,3 @@ def pos_scale(position, axis="other"):
 
     return new_pos
 
-
-def load_new_cached_texture(path):
-    texture = arc.Texture(f"{Globals.TEXTURE_CACHE}awawieguh", Image.open(path).convert("RGBA"))
-    Globals.TEXTURE_CACHE += 1
-    return texture

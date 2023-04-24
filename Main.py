@@ -4,11 +4,11 @@ import arcade as arc
 import Globals
 import Levels as lvl
 from World_Objects import Drill, DrillGui
-from Misc_Functions import IsRectCollidingWithPoint, get_turn_multiplier, pos_scale, load_new_cached_texture
+from Misc_Functions import IsRectCollidingWithPoint, get_turn_multiplier, pos_scale
 from Menus import start_menu, controls_menu, win_menu, loss_menu, play_selection, Icon
 from Particles import drill_wall_emit
 from math import radians, sin, cos
-from copy import deepcopy
+from PIL import Image
 
 
 class MainMenu(arc.View):
@@ -69,19 +69,14 @@ class PlayerSelect(arc.View):
         self.camera = None
         self.button_list = []
         self.text_list = []
-
-        self.input_icons = [
-            (load_new_cached_texture("Assets/Menus/keyboard_icon.png"), load_new_cached_texture("Assets/Menus/controller_icon.png")),
-            (load_new_cached_texture("Assets/Menus/keyboard_icon.png"), load_new_cached_texture("Assets/Menus/controller_icon.png")),
-            (load_new_cached_texture("Assets/Menus/keyboard_icon.png"), load_new_cached_texture("Assets/Menus/controller_icon.png")),
-            (load_new_cached_texture("Assets/Menus/keyboard_icon.png"), load_new_cached_texture("Assets/Menus/controller_icon.png")),
-        ]
+        self.icon_list = []
 
         self.controllers = arc.get_joysticks()
         # 0 = None, 1 = keyboard, 2 = controller
         self.input_types = [1, 0, 0, 0]
 
-        self.texture_cache_num = 0
+        self.kb_texture = arc.load_texture("Assets/Menus/keyboard_icon.png")
+        self.controller_texture = arc.load_texture("Assets/Menus/controller_icon.png")
 
     def on_show_view(self):
         play_selection(self)
@@ -103,23 +98,30 @@ class PlayerSelect(arc.View):
             except:
                 text.draw()
 
-        for icon, icon_texture in zip(self.input_types, self.input_icons):
-            icon_pos = self.button_list[self.input_types.index(icon)].location
-            icon_pos = (icon_pos[0] + pos_scale(271), icon_pos[1])
+        # draw icons for input selection
+        self.icon_list.clear()
+        # loop though input selections and the button ids
+        for icon, icon_num in zip(self.input_types, range(len(self.input_types))):
+            # add one to icon button id because they start at 1
+            icon_num = icon_num + 1
+            # find correct button for input type, put at that location
+            for button in self.button_list:
+                if button.id == f"i{icon_num}":
+                    icon_pos = button.location
+                    icon_pos = (icon_pos[0], icon_pos[1])
+            # draw icons
             if icon == 1:
-                print(icon_texture[0].name)
-                icon_texture[0].draw_scaled(icon_pos[0], icon_pos[1], 1/2)
+                self.kb_texture.draw_scaled(icon_pos[0], icon_pos[1], .5)
             elif icon == 2:
-                icon_texture[1].draw_scaled(icon_pos[0], icon_pos[1], 1/2)
+                self.controller_texture.draw_scaled(icon_pos[0], icon_pos[1], .5)
 
     def on_mouse_press(self, mouse_x: int, mouse_y: int, button: int, modifiers: int):
         for button in self.button_list:
             if IsRectCollidingWithPoint(button.get_rect(), (mouse_x, mouse_y)):
-                if button.id == "1":
-                    game_view = GameView()
+                if button.id == "START":
+                    game_view = GameView(self.input_types)
                     self.window.show_view(game_view)
                 if button.id[0] == "i":
-                    print(self.input_types[int(button.id[1]) - 1])
                     self.input_types[int(button.id[1]) - 1] = (self.input_types[int(button.id[1]) - 1] + 1) % 3
 
     def on_key_press(self, key, modifiers):
@@ -232,7 +234,7 @@ class LossView(EndMenus):
 
 
 class GameView(arc.View):
-    def __init__(self):
+    def __init__(self, inputs=None):
         super().__init__()
         self.width = Globals.SCREEN_WIDTH
         self.height = Globals.SCREEN_HEIGHT
@@ -249,6 +251,7 @@ class GameView(arc.View):
         self.player = None
 
         # input stuff
+        self.inputs = inputs
         self.controllers = arc.get_joysticks()
         self.controller = None
 
