@@ -4,8 +4,33 @@ from math import radians, sin, cos, degrees
 
 
 class BasicPlayer(arc.Sprite):
-    def __init__(self):
+    def __init__(self, control="keyboard"):
         super().__init__("./Assets/Player/playercar.png")
+        self.control = control
+
+        if self.control == "keyboard":
+            self.w_pressed = False
+            self.s_pressed = False
+            self.a_pressed = False
+            self.d_pressed = False
+
+            self.up_pressed = False
+            self.down_pressed = False
+            self.left_pressed = False
+            self.right_pressed = False
+
+        else:
+            self.thumbstick_rotation = 0
+            self.right_trigger_pressed = False
+            self.left_trigger_pressed = False
+
+        self.powerup_pressed = False
+
+        self.move_up = False
+        self.move_down = False
+        self.move_left = False
+        self.move_right = False
+
         self.scale = .3 * Globals.SCREEN_PERCENT
         self.angle = -90
         self.velocity = 0

@@ -342,109 +342,142 @@ class GameView(arc.View):
     def process_keychange(self):
         # print(self.controller.x)
 
-        if self.player is None:
+        if self.players is None:
             return
 
-        if self.controller:
-            self.thumbstick_rotation = self.controller.x
-        else:
-            self.thumbstick_rotation = 0
+        print(self.player_controls)
+        for player, control in zip(self.players, self.player_controls):
+            if player.control == "keyboard":
+                # Process left/right
+                if player.w_pressed or player.up_pressed:
+                    player.move_up = True
+                else:
+                    player.move_up = False
 
-        # Process left/right
-        if self.w_pressed or self.up_pressed or self.right_trigger_pressed:
-            self.move_up = True
-        else:
-            self.move_up = False
+                if player.s_pressed or player.down_pressed:
+                    player.move_down = True
+                else:
+                    player.move_down = False
 
-        if self.s_pressed or self.down_pressed or self.left_trigger_pressed:
-            self.move_down = True
-        else:
-            self.move_down = False
+                if player.a_pressed or player.left_pressed:
+                    player.move_left = True
+                else:
+                    player.move_left = False
 
-        if self.a_pressed or self.left_pressed or self.thumbstick_rotation < -Globals.DEADZONE:
-            self.move_left = True
-        else:
-            self.move_left = False
+                if player.d_pressed or player.right_pressed:
+                    player.move_right = True
+                else:
+                    player.move_right = False
 
-        if self.d_pressed or self.right_pressed or self.thumbstick_rotation > Globals.DEADZONE:
-            self.move_right = True
-        else:
-            self.move_right = False
+                controller_rotation_mult = 1
 
-        if self.seconds_timer < 10:
-            pass
-        elif self.move_up and not self.move_down:
-            self.player.accelerate()
-        elif self.move_down and not self.move_up:
-            self.player.backwards_accelerate()
+            elif player.control == "controller":
+                player.thumbstick_rotation = control.x
 
-        controller_rotation_mult = 1
+                # Process left/right
+                if player.right_trigger_pressed:
+                    player.move_up = True
+                else:
+                    player.move_up = False
 
-        if self.thumbstick_rotation != 0:
-            controller_rotation_mult = abs(self.thumbstick_rotation)
+                if player.left_trigger_pressed:
+                    player.move_down = True
+                else:
+                    player.move_down = False
 
-        if self.move_right and not self.move_left:
-            self.player.change_angle = radians(-Globals.PLAYER_ROTATION_SPEED) * controller_rotation_mult
-        elif self.move_left and not self.move_right:
-            self.player.change_angle = radians(Globals.PLAYER_ROTATION_SPEED) * controller_rotation_mult
-        elif not self.move_left and not self.move_right:
-            self.player.change_angle = 0
+                if player.thumbstick_rotation < -Globals.DEADZONE:
+                    player.move_left = True
+                else:
+                    player.move_left = False
 
-        if self.powerup_pressed and self.player.power_up == "drill":
-            new_drill = Drill(launch_angle=self.player.angle)
-            new_drill.center_x = self.player.center_x
-            new_drill.center_y = self.player.center_y
-            self.scene.add_sprite("powerups", sprite=new_drill)
-            self.powerup_pressed = False
-            self.player.power_up = None
-            self.drill_gui.toggle()
+                if player.thumbstick_rotation > Globals.DEADZONE:
+                    player.move_right = True
+                else:
+                    player.move_right = False
+
+                controller_rotation_mult = 1
+
+                if player.thumbstick_rotation != 0:
+                    controller_rotation_mult = abs(player.thumbstick_rotation)
+
+            else:
+                controller_rotation_mult = 1
+
+            print("sieujhjhersgisehrgiujhesnriguhsrethg")
+
+            if self.seconds_timer < 10:
+                pass
+            elif player.move_up and not player.move_down:
+                player.accelerate()
+            elif player.move_down and not player.move_up:
+                player.backwards_accelerate()
+
+            if player.move_right and not player.move_left:
+                player.change_angle = radians(-Globals.PLAYER_ROTATION_SPEED) * controller_rotation_mult
+            elif player.move_left and not player.move_right:
+                player.change_angle = radians(Globals.PLAYER_ROTATION_SPEED) * controller_rotation_mult
+            elif not player.move_left and not player.move_right:
+                player.change_angle = 0
+
+            if player.powerup_pressed and player.power_up == "drill":
+                new_drill = Drill(launch_angle=player.angle)
+                new_drill.center_x = player.center_x
+                new_drill.center_y = player.center_y
+                self.scene.add_sprite("powerups", sprite=new_drill)
+                player.powerup_pressed = False
+                player.power_up = None
+                self.drill_gui.toggle()
 
     def on_key_press(self, key, modifiers):
-        if key == arc.key.W:
-            self.w_pressed = True
-        if key == arc.key.S:
-            self.s_pressed = True
-        if key == arc.key.A:
-            self.a_pressed = True
-        if key == arc.key.D:
-            self.d_pressed = True
+        for player in self.players:
+            if player.control == "keyboard":
+                if key == arc.key.W:
+                    player.w_pressed = True
+                if key == arc.key.S:
+                    player.s_pressed = True
+                if key == arc.key.A:
+                    player.a_pressed = True
+                if key == arc.key.D:
+                    player.d_pressed = True
 
-        if key == arc.key.UP:
-            self.up_pressed = True
-        if key == arc.key.DOWN:
-            self.down_pressed = True
-        if key == arc.key.LEFT:
-            self.left_pressed = True
-        if key == arc.key.RIGHT:
-            self.right_pressed = True
+                if key == arc.key.UP:
+                    player.up_pressed = True
+                if key == arc.key.DOWN:
+                    player.down_pressed = True
+                if key == arc.key.LEFT:
+                    player.left_pressed = True
+                if key == arc.key.RIGHT:
+                    player.right_pressed = True
+
+                if key == arc.key.SPACE:
+                    player.powerup_pressed = True
 
         if key == arc.key.ESCAPE:
             arc.exit()
 
-        if key == arc.key.SPACE:
-            self.powerup_pressed = True
-
     def on_key_release(self, key, modifiers):
-        if key == arc.key.W:
-            self.w_pressed = False
-        if key == arc.key.S:
-            self.s_pressed = False
-        if key == arc.key.A:
-            self.a_pressed = False
-        if key == arc.key.D:
-            self.d_pressed = False
+        for player in self.players:
+            if player.control == "keyboard":
+                if key == arc.key.W:
+                    player.w_pressed = False
+                if key == arc.key.S:
+                    player.s_pressed = False
+                if key == arc.key.A:
+                    player.a_pressed = False
+                if key == arc.key.D:
+                    player.d_pressed = False
 
-        if key == arc.key.UP:
-            self.up_pressed = False
-        if key == arc.key.DOWN:
-            self.down_pressed = False
-        if key == arc.key.LEFT:
-            self.left_pressed = False
-        if key == arc.key.RIGHT:
-            self.right_pressed = False
+                if key == arc.key.UP:
+                    player.up_pressed = False
+                if key == arc.key.DOWN:
+                    player.down_pressed = False
+                if key == arc.key.LEFT:
+                    player.left_pressed = False
+                if key == arc.key.RIGHT:
+                    player.right_pressed = False
 
-        if key == arc.key.SPACE:
-            self.powerup_pressed = False
+                if key == arc.key.SPACE:
+                    player.powerup_pressed = False
 
         self.process_keychange()
 

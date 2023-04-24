@@ -51,20 +51,37 @@ def new_track(game, player_controls=None):
     game.scene.add_sprite_list_after("player", "cells")
 
     # handle player spawning and such
-    if not player_controls:
-        game.player = BasicPlayer()
-        game.player.center_x = 2 * Globals.CELL_WIDTH
-        game.player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT + game.player.width
-        game.scene.add_sprite("player", game.player)
-        game.physics_engine.add_sprite(game.player, friction=Globals.P_FRICTION,
-                                       moment_of_inertia=PymunkPhysicsEngine.MOMENT_INF,
-                                       damping=0.01, collision_type="player", max_velocity=Globals.P_MAX_SPEED)
-        game.player.pymunk_phys = game.physics_engine.get_physics_object(game.player)
+    for control in game.player_controls:
+        if control == "Load Failure":
+            pass
+        else:
+            player = BasicPlayer(control=control)
+            player.center_x = 2 * Globals.CELL_WIDTH
+            player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT + player.width
+            game.scene.add_sprite("player", player)
+            game.physics_engine.add_sprite(player, friction=Globals.P_FRICTION,
+                                           moment_of_inertia=PymunkPhysicsEngine.MOMENT_INF,
+                                           damping=0.01, collision_type="player", max_velocity=Globals.P_MAX_SPEED)
+            player.pymunk_phys = game.physics_engine.get_physics_object(player)
 
-        game.scene.add_sprite_list_after("bots", "player")
+            game.scene.add_sprite_list_after("bots", "player")
+            game.players.append(player)
+
+    # OLDER METHOD
+    #if not player_controls:
+        #game.player = BasicPlayer()
+        #game.player.center_x = 2 * Globals.CELL_WIDTH
+        #game.player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT + game.player.width
+        #game.scene.add_sprite("player", game.player)
+        #game.physics_engine.add_sprite(game.player, friction=Globals.P_FRICTION,
+        #                               moment_of_inertia=PymunkPhysicsEngine.MOMENT_INF,
+        #                               damping=0.01, collision_type="player", max_velocity=Globals.P_MAX_SPEED)
+        #3game.player.pymunk_phys = game.physics_engine.get_physics_object(game.player)
+
+        #game.scene.add_sprite_list_after("bots", "player")
     # proper loading will go here
-    else:
-        pass
+    #else:
+        #pass
 
     # bots
     bot = BasicBot(walls=game.scene["cells"], track_points=game.track_points)
