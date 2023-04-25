@@ -1,12 +1,13 @@
 import arcade as arc
 import Globals
-from math import radians, sin, cos, degrees
+from math import degrees
 
 
 class BasicPlayer(arc.Sprite):
     def __init__(self, control="keyboard"):
         super().__init__("./Assets/Player/playercar.png")
         self.control = control
+        self.color = ()
 
         if self.control == "keyboard":
             self.w_pressed = False
