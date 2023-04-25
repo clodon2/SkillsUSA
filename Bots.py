@@ -59,12 +59,9 @@ class BasicBot(arc.Sprite):
 
         angle = self.angle - degrees(desired_angle - (pi/2)) - 360
 
-        print(angle, Globals.BOT_MIN_TURN_ANGLE, desired_angle)
         if angle < -Globals.BOT_MIN_TURN_ANGLE:
-            print("t")
             self.change_angle = Globals.BOT_MIN_TURN_ANGLE
         elif angle > Globals.BOT_MIN_TURN_ANGLE:
-            print("t")
             self.change_angle = -Globals.BOT_ROTATION_SPEED
         else:
             self.change_angle = 0

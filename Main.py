@@ -9,6 +9,12 @@ from Menus import start_menu, controls_menu, win_menu, loss_menu, play_selection
 from Particles import drill_wall_emit
 from math import radians, sin, cos
 from copy import deepcopy
+from pyglet.input import get_controllers
+import pyglet
+
+
+# needed to detect some controllers
+pyglet.options["xinput_controllers"] = False
 
 
 class MainMenu(arc.View):
@@ -71,7 +77,6 @@ class PlayerSelect(arc.View):
         self.text_list = []
         self.icon_list = []
 
-        self.controllers = arc.get_joysticks()
         # 0 = None, 1 = keyboard, 2 = controller
         self.input_types = [1, 0, 0, 0]
 
@@ -256,47 +261,42 @@ class GameView(arc.View):
         self.controllers = arc.get_game_controllers()
 
         usable_controllers = ["keyboard"]
-        usable_controllers.extend(arc.get_game_controllers())
+        usable_controllers.extend(self.controllers)
 
         self.player_controls = []
-        print(self.inputs, arc.get_game_controllers())
         for i in self.inputs:
+            if i == 0:
+                continue
             # count controllers
             controller_count = 0
             for cont in usable_controllers:
-                print(type(cont), "cont type")
-                if type(cont) == object:
+                if type(cont) == pyglet.input.base.Joystick:
                     controller_count += 1
 
             keyboard_count = usable_controllers.count("keyboard")
 
             # adds players in as long as there are controllers left to use
             if (len(usable_controllers)) > 0:
-                print(i)
-                if i == 0:
-                    self.player_controls.append("None")
                 # use keyboard
                 if i == 1 and keyboard_count > 0:
                     self.player_controls.append("keyboard")
                     usable_controllers.pop(usable_controllers.index("keyboard"))
-                    # use controller
-                if i == 2 and controller_count > 0:
+                # use controller
+                elif i == 2 and controller_count > 0:
                     # if there is a keyboard left in the list
                     if keyboard_count > 0:
-                        print("kb run")
-                        u_c_copy = deepcopy(usable_controllers)
-                        u_c_copy.pop(u_c_copy.index("keyboard"))
-                        selected_controller = u_c_copy[0]
-                        self.player_controls.append(selected_controller)
-                        usable_controllers.pop(usable_controllers.index(selected_controller))
+                        if usable_controllers.index("keyboard") == 0:
+                            self.player_controls.append(usable_controllers[1])
+                            usable_controllers.pop(1)
+                        else:
+                            self.player_controls.append(usable_controllers[0])
+                            usable_controllers.pop(0)
                     else:
-                        print("self-run")
                         self.player_controls.append(usable_controllers[0])
                         usable_controllers.pop(0)
                 else:
                     self.player_controls.append("Load Failure")
 
-        print(self.player_controls)
         self.controller = None
 
         self.right_trigger_pressed = False
@@ -345,7 +345,6 @@ class GameView(arc.View):
         if self.players is None:
             return
 
-        print(self.player_controls)
         for player, control in zip(self.players, self.player_controls):
             if player.control == "keyboard":
                 # Process left/right
@@ -371,8 +370,19 @@ class GameView(arc.View):
 
                 controller_rotation_mult = 1
 
-            elif player.control == "controller":
+            elif type(player.control) == pyglet.input.base.Joystick:
                 player.thumbstick_rotation = control.x
+                player_triggers = round(control.z, 1)
+
+                if player_triggers > 0:
+                    player.left_trigger_pressed = True
+                else:
+                    player.left_trigger_pressed = False
+
+                if player_triggers < 0:
+                    player.right_trigger_pressed = True
+                else:
+                    player.right_trigger_pressed = False
 
                 # Process left/right
                 if player.right_trigger_pressed:
@@ -402,8 +412,6 @@ class GameView(arc.View):
 
             else:
                 controller_rotation_mult = 1
-
-            print("sieujhjhersgisehrgiujhesnriguhsrethg")
 
             if self.seconds_timer < 10:
                 pass
@@ -482,29 +490,33 @@ class GameView(arc.View):
         self.process_keychange()
 
     # noinspection PyMethodMayBeStatic
-    def on_joybutton_press(self, joystick, button):
-
-        if button == 7:  # Right Trigger
-            self.right_trigger_pressed = True
-        elif button == 6:  # Left Trigger
-            self.left_trigger_pressed = True
-        elif button == 3:  # "X" Button
-            self.powerup_pressed = True
+    def on_joybutton_press(self, _joystick, button):
+        for player in self.players:
+            if player.control == _joystick:
+                if button == 2:  # "X" Button
+                    player.powerup_pressed = True
+                if button == 3:
+                    player.powerup_pressed = True
+                if button == 7:
+                    player.control.z = -1
+                if button == 6:
+                    player.control.z = 1
 
     # noinspection PyMethodMayBeStatic
     def on_joybutton_release(self, joystick, button):
-
-        if button == 7:  # Right Trigger
-            self.right_trigger_pressed = False
-        elif button == 6:  # Left Trigger
-            self.left_trigger_pressed = False
-        elif button == 3:  # "X" Button
-            self.powerup_pressed = False
+        for player in self.players:
+            if player.control == joystick:
+                if button == 2:  # "X" Button
+                    player.powerup_pressed = False
+                if button == 3:
+                    player.powerup_pressed = False
+                if button == 7:
+                    player.control.z = 0
+                if button == 6:
+                    player.control.z = 0
 
     def on_show_view(self):
         arc.set_viewport(0, self.window.width, 0, self.window.height)
-
-        self.controllers = arcade.get_game_controllers()
 
         if self.controllers:
             if len(self.controllers) > 4:
@@ -574,25 +586,26 @@ class GameView(arc.View):
         self.drill_gui.activation_text.draw()
 
     def center_camera_to_player(self):
+        target_player = self.players[0]
         # Scroll left
         left_boundary = self.view_left + Globals.LEFT_VIEWPORT_MARGIN
-        if self.player.left < left_boundary:
-            self.view_left -= left_boundary - self.player.left
+        if target_player.left < left_boundary:
+            self.view_left -= left_boundary - target_player.left
 
         # Scroll right
         right_boundary = self.view_left + self.width - Globals.RIGHT_VIEWPORT_MARGIN
-        if self.player.right > right_boundary:
-            self.view_left += self.player.right - right_boundary
+        if target_player.right > right_boundary:
+            self.view_left += target_player.right - right_boundary
 
         # Scroll up
         top_boundary = self.view_bottom + self.height - Globals.TOP_VIEWPORT_MARGIN
-        if self.player.top > top_boundary:
-            self.view_bottom += self.player.top - top_boundary
+        if target_player.top > top_boundary:
+            self.view_bottom += target_player.top - top_boundary
 
         # Scroll down
         bottom_boundary = self.view_bottom + Globals.BOTTOM_VIEWPORT_MARGIN
-        if self.player.bottom < bottom_boundary:
-            self.view_bottom -= bottom_boundary - self.player.bottom
+        if target_player.bottom < bottom_boundary:
+            self.view_bottom -= bottom_boundary - target_player.bottom
 
         # keeps camera in left bound of map
         if self.view_left < 0:
@@ -655,12 +668,13 @@ class GameView(arc.View):
         self.center_camera_to_player()
 
         # player-power up box interaction
-        collisions = arc.check_for_collision_with_list(self.player, self.scene["power_boxes"])
-        for box in collisions:
-            if not self.player.power_up == "drill":
-                self.drill_gui.toggle()
-                self.player.power_up = "drill"
-            box.kill()
+        for player in self.players:
+            power_collisions = arc.check_for_collision_with_list(player, self.scene["power_boxes"])
+            for box in power_collisions:
+                if not player.power_up == "drill":
+                    self.drill_gui.toggle()
+                    player.power_up = "drill"
+                box.kill()
 
         # bot-exit interaction
         for bot in self.scene["bots"]:
@@ -670,15 +684,16 @@ class GameView(arc.View):
                 self.window.show_view(l_view)
 
         # player-exit interaction
-        exit_collisions = arc.check_for_collision_with_list(self.player, self.scene["exit"])
-        if exit_collisions:
-            self.race_num += 1
-            if self.race_num > Globals.RACE_NUM:
-                win_view = WinView()
-                self.window.show_view(win_view)
-            else:
-                Globals.randomize_wall_color()
-                self.load_level()
+        for player in self.players:
+            exit_collisions = arc.check_for_collision_with_list(player, self.scene["exit"])
+            if exit_collisions:
+                self.race_num += 1
+                if self.race_num > Globals.RACE_NUM:
+                    win_view = WinView()
+                    self.window.show_view(win_view)
+                else:
+                    Globals.randomize_wall_color()
+                    self.load_level()
 
         # powerup interactions
         for powerup in self.scene["powerups"]:

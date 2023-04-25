@@ -39,11 +39,11 @@ class BasicPlayer(arc.Sprite):
         self.pymunk_phys = None
         self.last_force = None
 
-    def accelerate(self):
-        Globals.ENGINE.apply_force(self, (0, Globals.P_MOVE_FORCE))
+    def accelerate(self, force_multiplier=1):
+        Globals.ENGINE.apply_force(self, (0, Globals.P_MOVE_FORCE * force_multiplier))
 
-    def backwards_accelerate(self):
-        Globals.ENGINE.apply_force(self, (0, -Globals.P_MOVE_FORCE))
+    def backwards_accelerate(self, force_multiplier=1):
+        Globals.ENGINE.apply_force(self, (0, -Globals.P_MOVE_FORCE * force_multiplier))
 
     def pymunk_moved(self, physics_engine, dx, dy, d_angle):
         self.velocity = self.pymunk_phys.body.force
