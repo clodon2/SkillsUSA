@@ -46,7 +46,7 @@ class Drill(PowerUp):
         self.texture = arc.load_texture("Assets/Powerups/drill/drill1.png")
         self.set_hit_box(self.texture.hit_box_points)
 
-        self.scale = .5
+        self.scale = .65
         self.angle = launch_angle + 90
 
         self.change_x = Globals.DRILL_SPEED
