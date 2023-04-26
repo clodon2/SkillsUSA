@@ -1,13 +1,14 @@
 import arcade as arc
 import Globals
 from math import degrees
+from Misc_Functions import random_color
 
 
 class BasicPlayer(arc.Sprite):
     def __init__(self, control="keyboard"):
         super().__init__("./Assets/Player/playercar.png")
         self.control = control
-        self.color = ()
+        self.color = random_color()
 
         if self.control == "keyboard":
             self.w_pressed = False

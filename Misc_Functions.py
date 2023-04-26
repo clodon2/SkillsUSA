@@ -69,4 +69,5 @@ def pos_scale(position, axis="other"):
 
 
 def random_color():
-
+    color = (randrange(0, 255), randrange(0, 255), randrange(0, 255))
+    return color
