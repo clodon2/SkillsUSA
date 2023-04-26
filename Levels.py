@@ -17,6 +17,7 @@ def new_track(game, player_controls=None):
     game.scene = arc.Scene()
     game.physics_engine = arc.PymunkPhysicsEngine(damping=Globals.DAMPING)
     Globals.ENGINE = game.physics_engine
+    game.players.clear()
 
     # load in track
     game.scene.add_sprite_list("cells", use_spatial_hash=True)
@@ -51,12 +52,13 @@ def new_track(game, player_controls=None):
     game.scene.add_sprite_list_after("players", "cells")
 
     # handle player spawning and such
-    print(game.player_controls)
+    for i in game.scene["players"]:
+        print(i, "aef")
     for control in game.player_controls:
         if control == "Load Failure":
             pass
         else:
-            player = BasicPlayer(control=control)
+            player = BasicPlayer(control=control, player_num=game.player_controls.index(control))
             player.center_x = 2 * Globals.CELL_WIDTH
             player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT + player.width
             game.scene.add_sprite("players", player)
@@ -67,6 +69,7 @@ def new_track(game, player_controls=None):
 
             game.scene.add_sprite_list_after("bots", "players")
             game.players.append(player)
+            print(player, player.center_x, player.center_y, game.physics_engine, Globals.ENGINE)
 
     # OLDER METHOD
     #if not player_controls:
@@ -85,14 +88,15 @@ def new_track(game, player_controls=None):
         #pass
 
     # bots
-    bot = BasicBot(walls=game.scene["cells"], track_points=game.track_points)
-    bot.center_x = 2 * Globals.CELL_WIDTH
-    bot.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT - bot.width
-    game.scene.add_sprite("bots", bot)
+    if Globals.BOT_ENABLED:
+        bot = BasicBot(walls=game.scene["cells"], track_points=game.track_points)
+        bot.center_x = 2 * Globals.CELL_WIDTH
+        bot.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT - bot.width
+        game.scene.add_sprite("bots", bot)
 
-    game.physics_engine.add_sprite_list(game.scene["bots"], friction=Globals.B_FRICTION,
-                                        damping=.01, collision_type="player")
-    bot.pymunk_phys = game.physics_engine.get_physics_object(bot)
+        game.physics_engine.add_sprite_list(game.scene["bots"], friction=Globals.B_FRICTION,
+                                            damping=.01, collision_type="player")
+        bot.pymunk_phys = game.physics_engine.get_physics_object(bot)
 
     game.scene.add_sprite_list_after("powerups", "bots")
 

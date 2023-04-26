@@ -5,10 +5,17 @@ from Misc_Functions import random_color
 
 
 class BasicPlayer(arc.Sprite):
-    def __init__(self, control="keyboard"):
-        super().__init__("./Assets/Player/playercar.png")
+    def __init__(self, control="keyboard", player_num=0):
+        if player_num == 1:
+            texture_path = "./Assets/Player/greencar.png"
+        elif player_num == 2:
+            texture_path = "./Assets/Player/pinkcar.png"
+        elif player_num == 3:
+            texture_path = "./Assets/Enemy/enemycar.png"
+        else:
+            texture_path = "./Assets/Player/playercar.png"
+        super().__init__(texture_path)
         self.control = control
-        self.color = random_color()
 
         if self.control == "keyboard":
             self.w_pressed = False

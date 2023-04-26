@@ -57,6 +57,7 @@ class Drill(PowerUp):
         self.k_bar_marg = Globals.CELL_WIDTH * 3
 
     def update(self):
+        self.change_y = Globals.DRILL_SPEED
         self.timer += 1
         self.center_x += -self.change_y * sin(radians(self.angle - 90))
         self.center_y += self.change_y * cos(radians(self.angle - 90))\

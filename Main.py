@@ -128,6 +128,13 @@ class PlayerSelect(arc.View):
                     self.window.show_view(game_view)
                 if button.id[0] == "i":
                     self.input_types[int(button.id[1]) - 1] = (self.input_types[int(button.id[1]) - 1] + 1) % 3
+                if button.id == "bot":
+                    if Globals.BOT_ENABLED:
+                        Globals.BOT_ENABLED = False
+                        button.buttonfull[1].color = arc.color.RED
+                    else:
+                        Globals.BOT_ENABLED = True
+                        button.buttonfull[1].color = arc.color.GREEN
 
     def on_key_press(self, key, modifiers):
         if key == arc.key.ESCAPE:

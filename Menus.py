@@ -6,7 +6,7 @@ from Misc_Functions import pos_scale
 # basic button, meant for demos
 class BasicButton:
     def __init__(self, text, location, size=(400, 100),
-                 color=arc.csscolor.BLACK, textcolor=arc.csscolor.WHITE,
+                 color=arc.csscolor.BLACK, font_color=arc.csscolor.WHITE,
                  tilt=0, id='none', font="Kenney Future Font", font_scale=1):
         self.id = id
         self.text = text
@@ -26,7 +26,7 @@ class BasicButton:
 
         textstartx = location[0]
         textstarty = location[1] - self.text_size / 2
-        text = arc.Text(text, textstartx, textstarty, textcolor, font_size=self.text_size,
+        text = arc.Text(text, textstartx, textstarty, font_color, font_size=self.text_size,
                         font_name=font)
         text.x = location[0] - text.content_width/2
 
@@ -177,11 +177,16 @@ def play_selection(view):
                     size=(110, 110), id='i4', font="ARCADECLASSIC")
     ]
 
+    bot_toggle = BasicButton("BOT", location=(Globals.MID_SCREEN + pos_scale(155, "x",), pos_scale(150, "y")),
+                             size=(110, 110), id="bot", font="ARCADECLASSIC", font_color=arc.color.GREEN,
+                             font_scale=2)
+
     title = BasicText("Player Selection", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.1),
                       textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
 
     view.button_list.extend(buttons)
     view.button_list.extend(icon_buttons)
+    view.button_list.append(bot_toggle)
     view.text_list.append(title)
 
     view.mouse_pos = 0, 0

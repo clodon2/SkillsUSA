@@ -15,6 +15,7 @@ SCREEN_TITLE = "Cave Racer"
 
 # Game Values
 RACE_NUM = 6
+BOT_ENABLED = True
 
 # Menu Stuff
 # for custom fonts
@@ -52,7 +53,7 @@ TOP_VIEWPORT_MARGIN = SCREEN_HEIGHT / 2
 CAMERA_SPEED = .3
 
 # Powerup stuff
-DRILL_SPEED = 30
+DRILL_SPEED = 18
 
 # Cell Generation
 GRID_WIDTH = 600
@@ -110,7 +111,7 @@ def resize_screen(width: int, height: int):
     PLAYER_DRIFT_SPEED = PLAYER_MAX_SPEED / 1.3
 
     BOT_MAX_SPEED = 10.23 * SCREEN_PERCENT
-    DRILL_SPEED = 14 * SCREEN_PERCENT
+    DRILL_SPEED = 18 * SCREEN_PERCENT
 
 
 def randomize_wall_color():
