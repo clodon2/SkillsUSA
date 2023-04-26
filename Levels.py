@@ -54,13 +54,14 @@ def new_track(game, player_controls=None):
     # handle player spawning and such
     for i in game.scene["players"]:
         print(i, "aef")
-    for control in game.player_controls:
+    for control, play_num in zip(game.player_controls, range(len(game.player_controls))):
         if control == "Load Failure":
             pass
         else:
-            player = BasicPlayer(control=control, player_num=game.player_controls.index(control))
+            player = BasicPlayer(control=control, player_num=play_num)
             player.center_x = 2 * Globals.CELL_WIDTH
-            player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT + player.width
+            player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT - (player.width * (play_num + 1)) + \
+                player.width * len(game.player_controls)
             game.scene.add_sprite("players", player)
             game.physics_engine.add_sprite(player, friction=Globals.P_FRICTION,
                                            moment_of_inertia=PymunkPhysicsEngine.MOMENT_INF,
@@ -69,7 +70,6 @@ def new_track(game, player_controls=None):
 
             game.scene.add_sprite_list_after("bots", "players")
             game.players.append(player)
-            print(player, player.center_x, player.center_y, game.physics_engine, Globals.ENGINE)
 
     # OLDER METHOD
     #if not player_controls:

@@ -54,13 +54,13 @@ def track_kill(grid):
     # start area
     if type(mid_row) == float:
         mid_row = int(mid_row)
-        row_range = (mid_row - 3, mid_row + 4)
+        row_range = (mid_row - 4, mid_row + 7)
         column_range = (0, 10)
         for r in range(row_range[0], row_range[1], 1):
             for current_column in range(column_range[0], column_range[1]):
                 grid[r][current_column] = 0
     elif type(mid_row) == int:
-        row_range = (mid_row - 3, mid_row + 3)
+        row_range = (mid_row - 4, mid_row + 6)
         column_range = (0, 10)
         for r in range(row_range[0], row_range[1], 1):
             for current_column in range(column_range[0], column_range[1]):
