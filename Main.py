@@ -4,13 +4,12 @@ import arcade as arc
 import Globals
 import Levels as lvl
 from World_Objects import Drill, DrillGui
-from Misc_Functions import IsRectCollidingWithPoint, get_turn_multiplier, pos_scale
-from Menus import start_menu, controls_menu, win_menu, loss_menu, play_selection, Icon
+from Misc_Functions import IsRectCollidingWithPoint
+from Menus import start_menu, controls_menu, win_menu, loss_menu, play_selection
 from Particles import drill_wall_emit
-from math import radians, sin, cos
-from copy import deepcopy
-from pyglet.input import get_controllers
+from math import radians
 import pyglet
+from pyglet.math import Vec2
 
 
 # needed to detect some controllers
