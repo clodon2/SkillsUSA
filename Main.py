@@ -4,12 +4,12 @@ import arcade as arc
 import Globals
 import Levels as lvl
 from World_Objects import Drill, DrillGui
-from Misc_Functions import IsRectCollidingWithPoint
-from Menus import start_menu, controls_menu, win_menu, loss_menu, play_selection
+from Misc_Functions import IsRectCollidingWithPoint, load_view
+from Menus import start_menu, controls_menu, win_menu, loss_menu, play_selection, loading_menu
 from Particles import drill_wall_emit
 from math import radians
 import pyglet
-from pyglet.math import Vec2
+from threading import Thread
 
 
 # needed to detect some controllers
@@ -123,7 +123,7 @@ class PlayerSelect(arc.View):
         for button in self.button_list:
             if IsRectCollidingWithPoint(button.get_rect(), (mouse_x, mouse_y)):
                 if button.id == "START":
-                    game_view = GameView(self.input_types)
+                    game_view = Loading(GameView(self.input_types))
                     self.window.show_view(game_view)
                 if button.id[0] == "i":
                     self.input_types[int(button.id[1]) - 1] = (self.input_types[int(button.id[1]) - 1] + 1) % 3
@@ -242,6 +242,47 @@ class LossView(EndMenus):
 
     def on_show_view(self):
         loss_menu(self)
+
+
+class Loading(arc.View):
+    def __init__(self, view_load):
+        super().__init__()
+        self.view_load = view_load
+
+        self.width = Globals.SCREEN_WIDTH
+        self.height = Globals.SCREEN_HEIGHT
+
+        self.scene = None
+        self.camera = None
+
+        self.timer = 0
+        self.finished = False
+
+    def on_show_view(self):
+        loading_menu(self)
+
+    def on_resize(self, width: int, height: int):
+        self.window.set_viewport(0, width, 0, height)
+        Globals.resize_screen(width, height)
+        self.__init__(self.view_load)
+        self.on_show_view()
+
+    def on_draw(self):
+        arc.draw_xywh_rectangle_filled(0, 0, Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT, color=arc.color.DARK_SLATE_GRAY)
+
+        self.camera.use()
+        self.scene.draw()
+
+    def update_loader(self, delta_time):
+        self.on_draw()
+        self.timer += delta_time
+        self.scene.update()
+
+    def on_update(self, delta_time: float):
+        self.update_loader(delta_time)
+        load_view(self.window, self.view_load)
+
+        self.finished = True
 
 
 class GameView(arc.View):

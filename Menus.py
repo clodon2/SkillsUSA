@@ -270,3 +270,21 @@ def loss_menu(view):
 
     view.button_list.append(exit_button)
     view.text_list.append(title)
+
+
+def loading_menu(view):
+    view.camera = arc.Camera(view.width, view.height)
+    view.scene = arc.Scene()
+
+    view.scene.add_sprite_list("load_box")
+
+    loading_box = arc.SpriteSolidColor(50, 50, arc.color.WHITE)
+    loading_box.center_y = Globals.SCREEN_HEIGHT / 2
+    loading_box.center_x = Globals.SCREEN_WIDTH / 2
+    loading_box.change_angle = 5
+
+    loading_text = arc.Text("Loading", start_x=0, start_y=0, color=arc.color.WHITE, font_name="ARCADECLASSIC")
+    loading_text.start_x = Globals.MID_SCREEN - (loading_text.content_width / 2)
+    loading_text.start_y = pos_scale(500, "y")
+
+    view.scene.add_sprite("load_box", loading_box)
