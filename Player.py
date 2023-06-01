@@ -93,3 +93,12 @@ class PlayerCamera:
         self.right_margin = 900 * self.width_percent
         self.bottom_margin = 360 * self.height_percent
         self.top_margin = 360 * self.height_percent
+
+    def set_margins(self):
+        self.width_percent = self.camera.viewport_width / Globals.SCREEN_WIDTH
+        self.height_percent = self.camera.viewport_height / Globals.SCREEN_HEIGHT
+
+        self.left_margin = 168.75 * self.width_percent
+        self.right_margin = 900 * self.width_percent
+        self.bottom_margin = 360 * self.height_percent
+        self.top_margin = 360 * self.height_percent

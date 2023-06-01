@@ -65,7 +65,7 @@ def new_track(game, player_controls=None):
             p_cam = player.camera.camera
 
             # set camera viewport size and camera location based on amount of players
-            p_view_w = p_cam.viewport_width / 2
+            p_view_w = p_cam.viewport_width
             p_view_h = p_cam.viewport_height
             if len(game.player_controls) == 2:
                 p_view_h = p_cam.viewport_height / 2
@@ -75,9 +75,8 @@ def new_track(game, player_controls=None):
                 p_view_w = p_cam.viewport_width / 2
                 p_view_h = p_cam.viewport_height / 2
             p_cam.resize(p_view_w, p_view_h)
-            p_cam.window_move(200, 0)
+            player.camera.set_margins()
 
-            print(p_cam.viewport_height)
 
             player.center_x = 2 * Globals.CELL_WIDTH
             player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT - (player.width * (play_num + 1)) + \

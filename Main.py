@@ -635,47 +635,50 @@ class GameView(arc.View):
             self.drill_gui.activation_text.draw()
 
     def center_camera_to_player(self):
-        target_player = self.players[0]
-        tp_cam = target_player.camera.camera
-        # Scroll left
-        left_boundary = target_player.camera.view_left + target_player.camera.left_margin
-        if target_player.left < left_boundary:
-            target_player.camera.view_left -= left_boundary - target_player.left
+        for player in self.players:
+            target_player = player
+            tp_cam = target_player.camera.camera
+            print(target_player.camera.left_margin, target_player.camera.right_margin, target_player.camera.top_margin,
+                  target_player.camera.bottom_margin)
+            # Scroll left
+            left_boundary = target_player.camera.view_left + target_player.camera.left_margin
+            if target_player.left < left_boundary:
+                target_player.camera.view_left -= left_boundary - target_player.left
 
-        # Scroll right
-        right_boundary = target_player.camera.view_left + tp_cam.viewport_width - target_player.camera.right_margin
-        if target_player.right > right_boundary:
-            target_player.camera.view_left += target_player.right - right_boundary
+            # Scroll right
+            right_boundary = target_player.camera.view_left + tp_cam.viewport_width - target_player.camera.right_margin
+            if target_player.right > right_boundary:
+                target_player.camera.view_left += target_player.right - right_boundary
 
-        # Scroll up
-        top_boundary = target_player.camera.view_bottom + tp_cam.viewport_height - target_player.camera.top_margin
-        if target_player.top > top_boundary:
-            target_player.camera.view_bottom += target_player.top - top_boundary
+            # Scroll up
+            top_boundary = target_player.camera.view_bottom + tp_cam.viewport_height - target_player.camera.top_margin
+            if target_player.top > top_boundary:
+                target_player.camera.view_bottom += target_player.top - top_boundary
 
-        # Scroll down
-        bottom_boundary = target_player.camera.view_bottom + target_player.camera.bottom_margin
-        if target_player.bottom < bottom_boundary:
-            target_player.camera.view_bottom -= bottom_boundary - target_player.bottom
+            # Scroll down
+            bottom_boundary = target_player.camera.view_bottom + target_player.camera.bottom_margin
+            if target_player.bottom < bottom_boundary:
+                target_player.camera.view_bottom -= bottom_boundary - target_player.bottom
 
-        # keeps camera in left bound of map
-        if target_player.camera.view_left < 0:
-            target_player.camera.view_left = 0
+            # keeps camera in left bound of map
+            if target_player.camera.view_left < 0:
+                target_player.camera.view_left = 0
 
-        # keeps camera in right bound of map
-        if (target_player.camera.view_left + self.width) > self.end_of_map:
-            target_player.camera.view_left = self.end_of_map - self.width
+            # keeps camera in right bound of map
+            if (target_player.camera.view_left + self.width) > self.end_of_map:
+                target_player.camera.view_left = self.end_of_map - self.width
 
-        # keeps camera in bottom bound of map
-        if target_player.camera.view_bottom < 0:
-            target_player.camera.view_bottom = 0
+            # keeps camera in bottom bound of map
+            if target_player.camera.view_bottom < 0:
+                target_player.camera.view_bottom = 0
 
-        # keeps camera in top bound of map
-        if target_player.camera.view_bottom + self.height > self.map_height:
-            target_player.camera.view_bottom = self.map_height - self.height
+            # keeps camera in top bound of map
+            if target_player.camera.view_bottom + self.height > self.map_height:
+                target_player.camera.view_bottom = self.map_height - self.height
 
-        # Scroll to the proper location
-        position = target_player.camera.view_left, target_player.camera.view_bottom
-        target_player.camera.camera.move_to(position, Globals.CAMERA_SPEED)
+            # Scroll to the proper location
+            position = target_player.camera.view_left, target_player.camera.view_bottom
+            target_player.camera.camera.move_to(position, Globals.CAMERA_SPEED)
 
         # OLD
         '''''
