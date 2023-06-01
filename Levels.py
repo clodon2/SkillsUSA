@@ -9,6 +9,7 @@ from Bots import BasicBot
 from Player import BasicPlayer
 from World_Objects import PowerUpBox, EndEntrance
 from Misc_Functions import get_shade
+from Camera import Camera
 
 
 def new_track(game, player_controls=None):
@@ -58,7 +59,26 @@ def new_track(game, player_controls=None):
         if control == "Load Failure":
             pass
         else:
-            player = BasicPlayer(control=control, player_num=play_num)
+            player = BasicPlayer(control=control,
+                                 player_num=play_num,
+                                 camera=Camera(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT))
+            p_cam = player.camera.camera
+
+            # set camera viewport size and camera location based on amount of players
+            p_view_w = p_cam.viewport_width / 2
+            p_view_h = p_cam.viewport_height
+            if len(game.player_controls) == 2:
+                p_view_h = p_cam.viewport_height / 2
+                if play_num == 0:
+                    p_cam.window_move(p_cam.view_x, Globals.SCREEN_HEIGHT / 2)
+            elif len(game.player_controls) >= 3:
+                p_view_w = p_cam.viewport_width / 2
+                p_view_h = p_cam.viewport_height / 2
+            p_cam.resize(p_view_w, p_view_h)
+            p_cam.window_move(200, 0)
+
+            print(p_cam.viewport_height)
+
             player.center_x = 2 * Globals.CELL_WIDTH
             player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT - (player.width * (play_num + 1)) + \
                 player.width * len(game.player_controls)

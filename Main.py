@@ -602,77 +602,80 @@ class GameView(arc.View):
         if self.camera is None:
             return
 
-        self.camera.use()
+        for player in self.players:
+            player.camera.camera.use()
 
-        arc.draw_rectangle_filled(self.camera.position.x + self.camera.viewport_width / 2,
-                                  self.camera.position.y + self.camera.viewport_height / 2,
-                                  self.camera.viewport_width, self.camera.viewport_height, arc.color.BLACK)
-        self.scene["powerups"].update_animation()
-        self.scene.draw()
+            arc.draw_rectangle_filled(player.camera.camera.position.x + player.camera.camera.viewport_width / 2,
+                                      player.camera.camera.position.y + player.camera.camera.viewport_height / 2,
+                                      player.camera.camera.viewport_width, player.camera.camera.viewport_height,
+                                      arc.color.BLACK)
+            self.scene["powerups"].update_animation()
+            self.scene.draw()
 
-        for emitter in self.emitters:
-            emitter.draw()
+            for emitter in self.emitters:
+                emitter.draw()
 
-        '''
-        for bot in self.scene["bots"]:
-            arc.draw_line(bot.center_x, bot.center_y, bot.center_x + 100 * cos(bot.desired_angle), bot.center_y + 100 * sin(bot.desired_angle), (0, 0, 255), 10)
-        
-        i = 0
-        for point in self.track_points:
-            i += 1
-            arc.draw_circle_filled(point[1] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[1], point[0] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[0], 10, (0, 255, 0))
-            arc.draw_text(str(i), point[1] * Globals.CELL_WIDTH, point[0] * Globals.CELL_HEIGHT)
-        '''
+            '''
+            for bot in self.scene["bots"]:
+                arc.draw_line(bot.center_x, bot.center_y, bot.center_x + 100 * cos(bot.desired_angle), bot.center_y + 100 * sin(bot.desired_angle), (0, 0, 255), 10)
+            
+            i = 0
+            for point in self.track_points:
+                i += 1
+                arc.draw_circle_filled(point[1] * Globals.CELL_WIDTH + Globals.GRID_BL_POS[1], point[0] * Globals.CELL_HEIGHT + Globals.GRID_BL_POS[0], 10, (0, 255, 0))
+                arc.draw_text(str(i), point[1] * Globals.CELL_WIDTH, point[0] * Globals.CELL_HEIGHT)
+            '''
 
-        # gui cam stuff
-        self.gui_camera.use()
-        if self.start_countdown:
-            self.start_countdown.draw()
+            # gui cam stuff
+            self.gui_camera.use()
+            if self.start_countdown:
+                self.start_countdown.draw()
 
-        self.drill_gui.draw()
-        self.drill_gui.activation_text.draw()
+            self.drill_gui.draw()
+            self.drill_gui.activation_text.draw()
 
     def center_camera_to_player(self):
         target_player = self.players[0]
+        tp_cam = target_player.camera.camera
         # Scroll left
-        left_boundary = self.view_left + Globals.LEFT_VIEWPORT_MARGIN
+        left_boundary = target_player.camera.view_left + target_player.camera.left_margin
         if target_player.left < left_boundary:
-            self.view_left -= left_boundary - target_player.left
+            target_player.camera.view_left -= left_boundary - target_player.left
 
         # Scroll right
-        right_boundary = self.view_left + self.width - Globals.RIGHT_VIEWPORT_MARGIN
+        right_boundary = target_player.camera.view_left + tp_cam.viewport_width - target_player.camera.right_margin
         if target_player.right > right_boundary:
-            self.view_left += target_player.right - right_boundary
+            target_player.camera.view_left += target_player.right - right_boundary
 
         # Scroll up
-        top_boundary = self.view_bottom + self.height - Globals.TOP_VIEWPORT_MARGIN
+        top_boundary = target_player.camera.view_bottom + tp_cam.viewport_height - target_player.camera.top_margin
         if target_player.top > top_boundary:
-            self.view_bottom += target_player.top - top_boundary
+            target_player.camera.view_bottom += target_player.top - top_boundary
 
         # Scroll down
-        bottom_boundary = self.view_bottom + Globals.BOTTOM_VIEWPORT_MARGIN
+        bottom_boundary = target_player.camera.view_bottom + target_player.camera.bottom_margin
         if target_player.bottom < bottom_boundary:
-            self.view_bottom -= bottom_boundary - target_player.bottom
+            target_player.camera.view_bottom -= bottom_boundary - target_player.bottom
 
         # keeps camera in left bound of map
-        if self.view_left < 0:
-            self.view_left = 0
+        if target_player.camera.view_left < 0:
+            target_player.camera.view_left = 0
 
         # keeps camera in right bound of map
-        if (self.view_left + self.width) > self.end_of_map:
-            self.view_left = self.end_of_map - self.width
+        if (target_player.camera.view_left + self.width) > self.end_of_map:
+            target_player.camera.view_left = self.end_of_map - self.width
 
         # keeps camera in bottom bound of map
-        if self.view_bottom < 0:
-            self.view_bottom = 0
+        if target_player.camera.view_bottom < 0:
+            target_player.camera.view_bottom = 0
 
         # keeps camera in top bound of map
-        if self.view_bottom + self.height > self.map_height:
-            self.view_bottom = self.map_height - self.height
+        if target_player.camera.view_bottom + self.height > self.map_height:
+            target_player.camera.view_bottom = self.map_height - self.height
 
         # Scroll to the proper location
-        position = self.view_left, self.view_bottom
-        self.camera.move_to(position, Globals.CAMERA_SPEED)
+        position = target_player.camera.view_left, target_player.camera.view_bottom
+        target_player.camera.camera.move_to(position, Globals.CAMERA_SPEED)
 
         # OLD
         '''''

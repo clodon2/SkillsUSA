@@ -5,7 +5,7 @@ from Misc_Functions import random_color
 
 
 class BasicPlayer(arc.Sprite):
-    def __init__(self, control="keyboard", player_num=0):
+    def __init__(self, control="keyboard", player_num=0, camera=None):
         if player_num == 1:
             texture_path = "./Assets/Player/greencar.png"
         elif player_num == 2:
@@ -15,6 +15,9 @@ class BasicPlayer(arc.Sprite):
         else:
             texture_path = "./Assets/Player/playercar.png"
         super().__init__(texture_path)
+
+        self.camera = PlayerCamera(camera)
+
         self.control = control
 
         if self.control == "keyboard":
@@ -75,3 +78,18 @@ class BasicPlayer(arc.Sprite):
 
             # prevent player from going outside area
             self.pymunk_phys.body._set_position((self.center_x, self.center_y))
+
+
+class PlayerCamera:
+    def __init__(self, cam):
+        self.camera = cam
+        self.view_left = 0
+        self.view_bottom = 0
+
+        self.width_percent = self.camera.viewport_width / Globals.SCREEN_WIDTH
+        self.height_percent = self.camera.viewport_height / Globals.SCREEN_HEIGHT
+
+        self.left_margin = 168.75 * self.width_percent
+        self.right_margin = 900 * self.width_percent
+        self.bottom_margin = 360 * self.height_percent
+        self.top_margin = 360 * self.height_percent
