@@ -697,8 +697,6 @@ class GameView(arc.View):
         for player in self.players:
             target_player = player
             tp_cam = target_player.camera.camera
-            print(target_player.camera.left_margin, target_player.camera.right_margin, target_player.camera.top_margin,
-                  target_player.camera.bottom_margin)
             # Scroll left
             left_boundary = target_player.camera.view_left + target_player.camera.left_margin
             if target_player.left < left_boundary:
