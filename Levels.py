@@ -68,15 +68,25 @@ def new_track(game, player_controls=None):
             p_view_w = p_cam.viewport_width
             p_view_h = p_cam.viewport_height
             if len(game.player_controls) == 2:
-                p_view_h = p_cam.viewport_height / 2
-                if play_num == 0:
-                    p_cam.window_move(p_cam.view_x, Globals.SCREEN_HEIGHT / 2)
+                if Globals.SPLITSCREEN_TYPE == "VERTICAL":
+                    p_view_w = p_cam.viewport_width / 2
+                    if play_num == 1:
+                        p_cam.window_move(Globals.SCREEN_WIDTH / 2, p_cam.view_y)
+                else:
+                    p_view_h = p_cam.viewport_height / 2
+                    if play_num == 0:
+                        p_cam.window_move(p_cam.view_x, Globals.SCREEN_HEIGHT / 2)
             elif len(game.player_controls) >= 3:
                 p_view_w = p_cam.viewport_width / 2
                 p_view_h = p_cam.viewport_height / 2
+                if play_num == 0:
+                    p_cam.window_move(p_cam.view_x, Globals.SCREEN_HEIGHT / 2)
+                elif play_num == 1:
+                    p_cam.window_move(Globals.SCREEN_WIDTH / 2, Globals.SCREEN_HEIGHT / 2)
+                elif play_num == 3:
+                    p_cam.window_move(Globals.SCREEN_WIDTH / 2, p_cam.view_y)
             p_cam.resize(p_view_w, p_view_h)
             player.camera.set_margins()
-
 
             player.center_x = 2 * Globals.CELL_WIDTH
             player.center_y = (Globals.GRID_HEIGHT / 2) * Globals.CELL_HEIGHT - (player.width * (play_num + 1)) + \

@@ -26,11 +26,13 @@ class BasicButton:
 
         textstartx = location[0]
         textstarty = location[1] - self.text_size / 2
-        text = arc.Text(text, textstartx, textstarty, font_color, font_size=self.text_size,
-                        font_name=font)
-        text.x = location[0] - text.content_width/2
 
-        self.buttonfull = [base, text]
+        self.textobj = arc.Text(self.text, textstartx, textstarty, font_color, font_size=self.text_size,
+                        font_name=font)
+
+        self.textobj.x = location[0] - self.textobj.content_width/2
+
+        self.buttonfull = [base, self.textobj]
 
     def update(self):
         for i in self.buttonfull:
@@ -121,18 +123,20 @@ def start_menu(view):
     view.text_list = []
     view.button_list = []
 
-    # example stuff
-    startbutton = BasicButton("PLAY", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 2),
-                                 size=(300, 110), id='start', font="ARCADECLASSIC")
-    controlsbutton = BasicButton("CONTROLS", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 4.5),
-                                    size=(300, 110), id='controls', font="ARCADECLASSIC")
+    buttons = [
+        BasicButton("PLAY", location=(Globals.MID_SCREEN, pos_scale(400, "Y")),
+                    size=(300, 110), id='start', font="ARCADECLASSIC"),
+        BasicButton("CONTROLS", location=(Globals.MID_SCREEN, pos_scale(250, "Y")),
+                                     size=(300, 110), id='controls', font="ARCADECLASSIC"),
+        BasicButton("SETTINGS", location=(Globals.MID_SCREEN, pos_scale(100, "Y")),
+                    size=(300, 110), id='settings', font="ARCADECLASSIC")
+    ]
 
     title = BasicText("Cave Racer", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.2),
                       textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
 
     # should probably make an easier way to do this
-    view.button_list.append(startbutton)
-    view.button_list.append(controlsbutton)
+    view.button_list.extend(buttons)
     view.text_list.append(title)
 
     view.mouse_pos = 0, 0
@@ -163,7 +167,9 @@ def play_selection(view):
         BasicButton("PLAYER FOUR", location=(x_default, pos_scale(80, "y")),
                     size=(300, 110), id='4', font="ARCADECLASSIC"),
         BasicButton("START", location=(start_b_x, start_b_y), size=(400, 200),
-                    id="START", font="ARCADECLASSIC", font_scale=2)
+                    id="START", font="ARCADECLASSIC", font_scale=2),
+        BasicButton("BACK", location=(50 * Globals.SCREEN_PERCENT, Globals.SCREEN_HEIGHT / 1.12),
+                    size=(100, 100), id='back', font="ARCADECLASSIC")
     ]
 
     icon_buttons = [
@@ -231,6 +237,42 @@ def controls_menu(view):
 
     # should probably make an easier way to do this
     view.button_list.append(startbutton)
+    view.text_list.append(title)
+    view.text_list.extend(text_objs)
+
+    view.mouse_pos = 0, 0
+    view.window.set_mouse_visible(True)
+
+
+def settings_menu(view):
+    # Setup the Cameras
+    view.camera = arc.Camera(view.width, view.height)
+    # needed to load buttons and text
+    view.text_list = []
+    view.button_list = []
+
+    # example stuff
+    startbutton = BasicButton("BACK", location=(50 * Globals.SCREEN_PERCENT, Globals.SCREEN_HEIGHT / 1.12),
+                                 size=(100, 100), id='back', font="ARCADECLASSIC")
+
+    title = BasicText("Settings", location=(Globals.MID_SCREEN, Globals.SCREEN_HEIGHT / 1.2),
+                      textsize=60, font="ARCADECLASSIC", text_color=arc.color.WHITE)
+
+    text_objs = [
+                 BasicText("Splitscreen type (2 players)",
+                           location=(pos_scale(300, "x"), 480 * Globals.SCREEN_PERCENTS[1]),
+                           textsize=30, font="ARCADECLASSIC", text_color=arc.color.WHITE),
+    ]
+
+    buttons = [
+        BasicButton("Vertical", location=(Globals.MID_SCREEN + pos_scale(300, "x", ), pos_scale(480, "y")),
+                    size=(380, 110), id="2splitscreen", font="ARCADECLASSIC", font_color=arc.color.WHITE,
+                    font_scale=2)
+    ]
+
+    # should probably make an easier way to do this
+    view.button_list.append(startbutton)
+    view.button_list.extend(buttons)
     view.text_list.append(title)
     view.text_list.extend(text_objs)
 

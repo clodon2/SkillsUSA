@@ -16,6 +16,7 @@ SCREEN_TITLE = "Cave Racer"
 # Game Values
 RACE_NUM = 6
 BOT_ENABLED = True
+SPLITSCREEN_TYPE = "VERTICAL"
 
 # Menu Stuff
 # for custom fonts
