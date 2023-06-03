@@ -665,16 +665,16 @@ class GameView(arc.View):
                 target_player.camera.view_left = 0
 
             # keeps camera in right bound of map
-            if (target_player.camera.view_left + self.width) > self.end_of_map:
-                target_player.camera.view_left = self.end_of_map - self.width
+            if (target_player.camera.view_left + tp_cam.viewport_width) > self.end_of_map:
+                target_player.camera.view_left = self.end_of_map - tp_cam.viewport_width
 
             # keeps camera in bottom bound of map
             if target_player.camera.view_bottom < 0:
                 target_player.camera.view_bottom = 0
 
             # keeps camera in top bound of map
-            if target_player.camera.view_bottom + self.height > self.map_height:
-                target_player.camera.view_bottom = self.map_height - self.height
+            if (target_player.camera.view_bottom + tp_cam.viewport_height) > self.map_height:
+                target_player.camera.view_bottom = self.map_height - tp_cam.viewport_height
 
             # Scroll to the proper location
             position = target_player.camera.view_left, target_player.camera.view_bottom
